@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authActions } from '../store';
 import FileUpload from "./common/file-upload/file-upload.component";
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 function Upload() {
   const user_id = useSelector((state) => state.user_id);
   const token = useSelector(state => state.accessToken);
@@ -19,7 +21,7 @@ function Upload() {
 
       try {
         await axios
-        .get(`http://localhost:8000/file-collection/${user_id}`, config)
+        .get(`${BACKEND_API_PREFIX}/file-collection/${user_id}`, config)
         .then((res) => {
           setAllFiles(res.data);
         });
@@ -56,7 +58,7 @@ function Upload() {
 
     console.log('1', formData)
 
-		await axios.post("http://localhost:8000/upload", formData, config).then(() => {
+		await axios.post(`${BACKEND_API_PREFIX}/upload`, formData, config).then(() => {
       loadAllFiles();
       childRef.current.removeFiles();
     })

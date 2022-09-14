@@ -6,7 +6,8 @@ import { useSelector } from "react-redux";
 import Slider from "./common//MultiRangeSlider";
 import BarChart from "./common/BarChart";
 import LineChart from "./common/LineChart";
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const FileDataViewer = (props) => {
   const token = useSelector((state) => state.accessToken);
 
@@ -38,7 +39,7 @@ const FileDataViewer = (props) => {
     if (selectedModel !== "0") {
       await axios
         .get(
-          `http://localhost:8000/file_apply_model/${props.id}/${selectedModel}`,
+          `${BACKEND_API_PREFIX}/file_apply_model/${props.id}/${selectedModel}`,
           config
         )
         .then((res) => {
@@ -85,7 +86,7 @@ const FileDataViewer = (props) => {
   // Common
   const loadFileData = async () => {
     await axios
-      .get(`http://localhost:8000/file-read/${props.id}`, config)
+      .get(`${BACKEND_API_PREFIX}/file-read/${props.id}`, config)
       .then((res) => {
         setFileData(res.data.data.slice(1));
       });

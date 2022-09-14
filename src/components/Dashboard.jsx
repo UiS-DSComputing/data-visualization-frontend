@@ -9,6 +9,8 @@ import icon from '../../node_modules/leaflet/dist/images/marker-icon.png';
 import iconShadow from '../../node_modules/leaflet/dist/images/marker-shadow.png';
 import { authActions } from '../store/';
 import FileDataViewer from "./FileDataViewer";
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -50,7 +52,7 @@ const Dashboard = () => {
   const loadAllFiles = async () => {
     try {
       await axios
-      .get(`http://localhost:8000/file-collection/${user_id}`, config)
+      .get(`${BACKEND_API_PREFIX}/file-collection/${user_id}`, config)
       .then((res) => {
         setAllFiles(res.data);
       });

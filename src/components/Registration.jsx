@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const Registration = () => {
 	// const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Registration = () => {
 	const handleSubmit = (e) => {
     e.preventDefault();
 
-		axios.post("http://localhost:8000/user", inputVal)
+		axios.post(`${BACKEND_API_PREFIX}/user`, inputVal)
 		.then( (res) => {
 			navigate("/login")
 		}).then(() => {navigate("/")}).catch((err) => {

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authActions } from '../store/';
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const DataCollection = () => {
   const user_id = useSelector((state) => state.user_id);
   const token = useSelector((state) => state.accessToken);
@@ -27,7 +28,7 @@ const DataCollection = () => {
     
       try {
         await axios
-      .get(`http://localhost:8000/file-collection/${user_id}`, config)
+      .get(`${BACKEND_API_PREFIX}/file-collection/${user_id}`, config)
       .then((res) => {
         setAllFiles(res.data);
       });
@@ -48,7 +49,7 @@ const DataCollection = () => {
     
       try {
         await axios
-        .get(`http://localhost:8000/file-read/${selectedFile}`, config)
+        .get(`${BACKEND_API_PREFIX}/file-read/${selectedFile}`, config)
         .then((res) => {
           setFileData(res.data.data.slice(1));
         });

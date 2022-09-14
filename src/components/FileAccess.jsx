@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../store";
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const FileAccess = () => {
 
   const user_id = useSelector((state) => state.user_id);
@@ -44,7 +45,7 @@ const FileAccess = () => {
 
 	  try {
 		await axios
-		.get(`http://localhost:8000/users`, config)
+		.get(`${BACKEND_API_PREFIX}/users`, config)
 		.then((res) => {
 		  setAllUsers(res.data);
 		});
@@ -59,7 +60,7 @@ const FileAccess = () => {
 
   const loadAllFiles = async () => {
     await axios
-      .get(`http://localhost:8000/file-collection`, config)
+      .get(`${BACKEND_API_PREFIX}/file-collection`, config)
       .then((res) => {
         setAllFiles(res.data);
       });
@@ -67,7 +68,7 @@ const FileAccess = () => {
 
 	const loadFileAccessForRequest = async () => {
 		await axios
-      .get(`http://localhost:8000/file_access_for_request/${selectedUser}`, config)
+      .get(`${BACKEND_API_PREFIX}/file_access_for_request/${selectedUser}`, config)
       .then((res) => {
         setFileListForRequest(res.data);
       });
@@ -75,7 +76,7 @@ const FileAccess = () => {
 
 	const loadFileAccessForAccept = async () => {
 		await axios
-      .get(`http://localhost:8000/file_access_list_for_accept_decline`, config)
+      .get(`${BACKEND_API_PREFIX}/file_access_list_for_accept_decline`, config)
       .then((res) => {
         setFileListForAccept(res.data);
       });
@@ -83,7 +84,7 @@ const FileAccess = () => {
 
 	const loadFileAccessForRemove = async () => {
 		await axios
-      .get(`http://localhost:8000/file_access_list_for_remove`, config)
+      .get(`${BACKEND_API_PREFIX}/file_access_list_for_remove`, config)
       .then((res) => {
         setFileListForRemove(res.data);
       });
@@ -91,7 +92,7 @@ const FileAccess = () => {
 
 	const handleRequestForAccess = async (file_req) => {
 		await axios
-      .post(`http://localhost:8000/file_access_request_send`, {file_id: file_req.file_id, file_owner: selectedUser}, config)
+      .post(`${BACKEND_API_PREFIX}/file_access_request_send`, {file_id: file_req.file_id, file_owner: selectedUser}, config)
       .then((res) => {
         loadFileAccessForRequest();
       });
@@ -106,7 +107,7 @@ const FileAccess = () => {
 			"status": 2
 		}
 		await axios
-      .patch(`http://localhost:8000/file_access_approved/${file_req.id}`, request, config)
+      .patch(`${BACKEND_API_PREFIX}/file_access_approved/${file_req.id}`, request, config)
       .then((res) => {
         loadFileAccessForAccept();
 				loadFileAccessForRemove();	
@@ -115,7 +116,7 @@ const FileAccess = () => {
 
 	const handleRequestDecline = async (file_req) => {
 		await axios
-      .delete(`http://localhost:8000/file_access_remove_decline/${file_req.id}`, config)
+      .delete(`${BACKEND_API_PREFIX}/file_access_remove_decline/${file_req.id}`, config)
       .then((res) => {
 				loadFileAccessForAccept();
         loadFileAccessForRemove();

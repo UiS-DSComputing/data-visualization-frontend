@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../store';
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const Login = () => {
 	const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,13 +25,15 @@ const Login = () => {
     setErrMsg('')
     e.preventDefault();
 
-      axios.post("http://localhost:8000/login", inputVal)
+      axios.post(`${BACKEND_API_PREFIX}/login`, inputVal)
       .then( (res) => {
+        console.log("hello world", res)
         if(res.status === 200) {
           dispatch(authActions.login(res.data))
         }
       }).then(() => {navigate("/")}).catch((err) => {
-        setErrMsg(err.response.data.detail)
+        console.log(err);
+        // setErrMsg(err.response.data.detail)
         
       });
   }

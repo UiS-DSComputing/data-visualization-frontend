@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../store";
-
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 const ModelAccess = () => {
 
   const user_id = useSelector((state) => state.user_id);
@@ -69,7 +70,7 @@ const ModelAccess = () => {
 
 	  try {
 		await axios
-		.get(`http://localhost:8000/users`, config)
+		.get(`${BACKEND_API_PREFIX}/users`, config)
 		.then((res) => {
 		  setAllUsers(res.data);
 		});
