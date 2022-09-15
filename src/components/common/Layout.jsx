@@ -2,6 +2,7 @@ import React from 'react';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { FaRegFileAlt } from 'react-icons/fa';
 import { GiFactory } from 'react-icons/gi';
+import {BiTerminal} from 'react-icons/bi'
 import { GrDatabase, GrPieChart, GrSettingsOption } from 'react-icons/gr';
 // import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,10 +17,12 @@ import ModelAccess from '../ModelAccess';
 import Registration from '../Registration';
 import RigAccess from '../RigAccess';
 import Upload from '../Upload';
+import FL from '../FL';
 
 const Layout = () => {
   // const navigate = useNavigate();
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  // const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isLoggedIn=true
   const user_name = useSelector(state => state.user_name);
   // const token = useSelector(state => state.accessToken);
   const dispatch = useDispatch();
@@ -57,6 +60,9 @@ const Layout = () => {
             </li>
             <li className="nav-item">
               <a className="nav-link"> <AiOutlineCloudUpload className='ricon'/> <Link to="/upload"> Upload </Link></a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link"> <BiTerminal className='ricon'/> <Link to="/fl"> FL </Link></a>
             </li>
           </ul>
         </div>
@@ -104,6 +110,7 @@ const Layout = () => {
                 <Route path="/model-access" index element={ isLoggedIn ? <ModelAccess/> : <Navigate to="/login" />} />
                 <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} />
                 <Route path="/upload" element={ isLoggedIn ? <Upload /> : <Navigate to="/login" />} />
+                <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/fl" />} />
               </Routes>
             
             </div>

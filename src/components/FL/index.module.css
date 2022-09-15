@@ -1,0 +1,57 @@
+.newbtn{
+    background-color: #337aff;
+    width: fit-content;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+}
+
+.tools{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.switch{
+    display: flex;
+    align-items: flex-start;;
+}
+
+.switch div{
+    /* border: 1px solid black; */
+    padding: 0.2em 1em;
+}
+
+.swt{
+    border: none;
+}
+
+.checked_sw{
+    background: #337aff;
+    color: white;
+}
+
+
+.tasks {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 2em;
+    text-align: left;
+  }
+  
+  .tasks td, .tasks th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .tasks tr:nth-child(even){background-color: #f2f2f2;}
+  
+  .tasks tr:hover {background-color: #ddd;}
+  
+  .tasks th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #717171;
+    color: white;
+  }
