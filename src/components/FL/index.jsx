@@ -36,9 +36,17 @@ function FL() {
     loadAllFiles();
   }, []);
 
+
+  return (
+    <div>
+      <Table />
+    </div>
+  );
+}
+function Table() {
   const [pop, setPop] = useState(false);
   const date = new Date();
-  const [testTasks,setTask] = useState([
+  const [testTasks, setTask] = useState([
     {
       id: "sygak7319731g12ygdak82",
       task: "task1",
@@ -93,10 +101,10 @@ function FL() {
   function PopUp(is) {
     setPop(is);
   }
-  function addRequest(r){
-    let tmptasks=testTasks
-    tmptasks.push(r)
-    setTask(tmptasks)
+  function addRequest(r) {
+    let tmptasks = testTasks;
+    tmptasks.push(r);
+    setTask(tmptasks);
   }
   return (
     <div>
@@ -136,7 +144,12 @@ function FL() {
                 <td>{item.id}</td>
                 <td>{item.task}</td>
                 <td>{item.rounds}</td>
-                <td style={{ backgroundColor: status[item.status].color, color:"white" }}>
+                <td
+                  style={{
+                    backgroundColor: status[item.status].color,
+                    color: "white",
+                  }}
+                >
                   {status[item.status].value}
                 </td>
                 <td>{item.client}</td>
@@ -148,9 +161,8 @@ function FL() {
           })}
         </tbody>
       </table>
-      {pop && <PopBox PopUp={PopUp} addRequest={addRequest}/>}
+      {pop && <PopBox PopUp={PopUp} type={"request"} addRequest={addRequest} />}
     </div>
   );
 }
-
 export default FL;

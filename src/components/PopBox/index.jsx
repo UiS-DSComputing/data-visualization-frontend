@@ -3,9 +3,10 @@ import { GrClose } from "react-icons/gr";
 import pop from "./index.module.css";
 import { nanoid } from "nanoid";
 import AddTrainRequest from "../AddTrainQuest";
+import AddStation from "../AddStation";
 
 export default function PopBox(props) {
-  const {PopUp,addRequest}=props
+  const {PopUp,addRequest,type,addStation}=props
   function handleClose(is){
     PopUp(is)
   }
@@ -20,7 +21,9 @@ export default function PopBox(props) {
             children={<GrClose />}
           ></span>
         </div>
-          <AddTrainRequest addRequest={addRequest} />
+        {
+          type=="station"?<AddStation addStation={addStation} handleClose={handleClose}/>:<AddTrainRequest addRequest={addRequest} />
+        }
       </div>
     </div>
   );

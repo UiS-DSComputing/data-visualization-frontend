@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { FaRegFileAlt } from 'react-icons/fa';
 import { GiFactory } from 'react-icons/gi';
@@ -10,7 +10,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import EquiLogo from '../../assets/logo-company.png';
 import { authActions } from '../../store/';
 import Dashboard from '../Dashboard';
-import DataCollection from '../DataCollection';
+import Station from '../Station';
 import FileAccess from '../FileAccess';
 import Login from '../Login';
 import ModelAccess from '../ModelAccess';
@@ -43,7 +43,7 @@ const Layout = () => {
                 <a className="nav-link"><GrPieChart className='ricon'/> <Link to="/"> Dashboard </Link></a>
               </li>
             <li className="nav-item">
-              <a className="nav-link"> <GrDatabase className='ricon'/> <Link to="/data"> Data Collection </Link>  </a>
+              <a className="nav-link"> <GrDatabase className='ricon'/> <Link to="/station"> Station </Link>  </a>
 
             </li>
             <li className="nav-item">
@@ -105,7 +105,7 @@ const Layout = () => {
                 <Route path="/" index element={ isLoggedIn ? <Dashboard/> : <Navigate to="/login" /> } />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/registration" element={<Registration/>} />
-                <Route path="/data" index element={ isLoggedIn ? <DataCollection/> : <Navigate to="/login" />} />
+                <Route path="/station" index element={ isLoggedIn ? <Station/> : <Navigate to="/login" />} />
                 <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} />
                 <Route path="/model-access" index element={ isLoggedIn ? <ModelAccess/> : <Navigate to="/login" />} />
                 <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} />

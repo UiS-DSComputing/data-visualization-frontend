@@ -11,32 +11,6 @@ import { nanoid } from "nanoid";
 
 function AddTrainRequest(props) {
   const {addRequest}=props
-  // const user_id = useSelector((state) => state.user_id);
-  // const navigate = useNavigate();
-  // const token = useSelector((state) => state.accessToken);
-  // const [allFiles, setAllFiles] = useState([]);
-  // const dispatch1 = useDispatch();
-
-  // const config = {
-  //   headers: { Authorization: `Bearer ${token}` },
-  // };
-  // const loadAllFiles = async () => {
-  //   try {
-  //     await axios
-  //       .get(`http://localhost:8000/file-collection/${user_id}`, config)
-  //       .then((res) => {
-  //         setAllFiles(res.data);
-  //       });
-  //   } catch (err) {
-  //     if (err.response.status === 401) {
-  //       dispatch1(authActions.logout());
-  //       navigate("/login");
-  //     }
-  //   }
-  // };
-  // useEffect(() => {
-  //   loadAllFiles();
-  // }, []);
 
   const [taskName, setTaskName] = useState("task1");
   const [model, setModel] = useState("");
