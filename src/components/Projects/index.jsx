@@ -22,8 +22,8 @@ function Station() {
       {!isLogedFL && <LogST changeLogStatus={changeLogStatus} />}
       {isLogedFL && (
         <div className={s.layout}>
-          <UserInfo user={user} logout={handleLogout}/>
-          <Table />
+          <UserInfo user={user} logout={handleLogout} />
+          <Table user={user} />
         </div>
       )}
     </div>
@@ -59,7 +59,8 @@ function UserInfo(prop) {
   );
 }
 
-function Table() {
+function Table(props) {
+    const {user}=props
   const titles = [
     "ID",
     "Dataset",
@@ -75,8 +76,8 @@ function Table() {
       dataset: [1, 2, 3],
       datatype: "CV",
       filetype: "image",
-      owner: ["OP1", "OP2"],
-      email: ["op1@op1.com", "op2@op2.com"],
+      owner: ["cop1"],
+      email: ["cOP1@cop1.com"],
       affiliation: ["test affiliation"],
       description: ["Description"],
       savepath: "./op/files",
@@ -126,7 +127,7 @@ function Table() {
           })}
         </tbody>
       </table>
-      {pop && <PopBox PopUp={PopUp} type={"station"} addStation={addStation} />}
+      {pop && <PopBox PopUp={PopUp} type={"station"} addStation={addStation} user={user}/>}
     </div>
   );
 }

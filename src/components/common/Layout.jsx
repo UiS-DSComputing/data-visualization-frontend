@@ -10,14 +10,17 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import EquiLogo from '../../assets/logo-company.png';
 import { authActions } from '../../store/';
 import Dashboard from '../Dashboard';
-import Station from '../Station';
-import FileAccess from '../FileAccess';
+import Projects from '../Projects';
+// import FileAccess from '../FileAccess';
 import Login from '../Login';
-import ModelAccess from '../ModelAccess';
+// import ModelAccess from '../ModelAccess';
 import Registration from '../Registration';
-import RigAccess from '../RigAccess';
-import Upload from '../Upload';
+// import RigAccess from '../RigAccess';
+// import Upload from '../Upload';
 import FL from '../FL';
+import DataMarket from '../DataMarket'
+import ModelMarket from '../ModelMarket';
+import logo from '../../assets/uis.png'
 
 const Layout = () => {
   // const navigate = useNavigate();
@@ -33,34 +36,37 @@ const Layout = () => {
     <div className="az-header" style={{position: 'fixed', top: '0px', width: '100%'}}>
       <div className="container" style={{width: '90%', margin: 'auto'}}>
         <div className="az-header-left">
-          <a className="az-logo"><span></span>University of Stavanger</a>
-          <a id="azMenuShow" className="az-header-menu-icon d-lg-none"><span></span></a>
+          <img src={logo} style={{width:"135px"}}></img>
         </div>
         { isLoggedIn && 
         <div className="az-header-menu">
           <ul className="nav">
               <li className="nav-item">
-                <a className="nav-link"><GrPieChart className='ricon'/> <Link to="/"> Dashboard </Link></a>
+                <a className="nav-link"><GrPieChart className='ricon'/> <Link to="/"> Data Market </Link></a>
               </li>
+              <li className="nav-item">
+              <a className="nav-link"> <GrSettingsOption className='ricon'/> <Link to="/modelMarket"> Model Market </Link>  </a>
+            </li>
             <li className="nav-item">
-              <a className="nav-link"> <GrDatabase className='ricon'/> <Link to="/station"> Station </Link>  </a>
+              <a className="nav-link"> <FaRegFileAlt className='ricon'/> <Link to="/dashboard"> Dashboard </Link>  </a>
 
             </li>
             <li className="nav-item">
+              <a className="nav-link"> <GrDatabase className='ricon'/> <Link to="/projects"> Projects </Link>  </a>
+
+            </li>
+            {/* <li className="nav-item">
               <a className="nav-link"> <FaRegFileAlt className='ricon'/> <Link to="/file-access"> File Access </Link>  </a>
 
             </li>
-            <li className="nav-item">
-              <a className="nav-link"> <GrSettingsOption className='ricon'/> <Link to="/model-access"> Model Access </Link>  </a>
 
-            </li>
             <li className="nav-item">
               <a className="nav-link"> <GiFactory className='ricon'/> <Link to="/rig-access"> Rig Access </Link>  </a>
 
             </li>
             <li className="nav-item">
               <a className="nav-link"> <AiOutlineCloudUpload className='ricon'/> <Link to="/upload"> Upload </Link></a>
-            </li>
+            </li> */}
             <li className="nav-item">
               <a className="nav-link"> <BiTerminal className='ricon'/> <Link to="/fl"> FL </Link></a>
             </li>
@@ -98,21 +104,20 @@ const Layout = () => {
 
     <div className="az-content pd-y-20 pd-lg-y-30 pd-xl-y-40" style={{paddingTop: '90px'}}>
         <div className="container" style={{width: '93%', margin: 'auto'}}>
-
             <div style={{paddingLeft: '0px'}} className="az-content-body pd-lg-l-40 d-flex flex-column">
-            
               <Routes>
-                <Route path="/" index element={ isLoggedIn ? <Dashboard/> : <Navigate to="/login" /> } />
+                <Route path="/" index element={ isLoggedIn ? <DataMarket/> : <Navigate to="/login" /> } />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/registration" element={<Registration/>} />
-                <Route path="/station" index element={ isLoggedIn ? <Station/> : <Navigate to="/login" />} />
-                <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} />
-                <Route path="/model-access" index element={ isLoggedIn ? <ModelAccess/> : <Navigate to="/login" />} />
-                <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} />
-                <Route path="/upload" element={ isLoggedIn ? <Upload /> : <Navigate to="/login" />} />
+                <Route path="/projects" index element={ isLoggedIn ? <Projects/> : <Navigate to="/login" />} />
+                <Route path="/modelMarket" index element={ isLoggedIn ? <ModelMarket/> : <Navigate to="/login" />} />
+                <Route path="/dashboard" element={ isLoggedIn ? <Dashboard /> : <Navigate to="/fl" />} />
                 <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/fl" />} />
+
+                {/* <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} /> */}
+                {/* <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} /> */}
+                {/* <Route path="/upload" element={ isLoggedIn ? <Upload /> : <Navigate to="/login" />} /> */}
               </Routes>
-            
             </div>
         </div>
     </div>

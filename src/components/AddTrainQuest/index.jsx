@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 // import { map } from "jquery";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 // import { GrAction } from "react-icons/gr";
@@ -7,8 +7,11 @@ import React, { useEffect, useRef, useState, useReducer } from "react";
 // import { authActions } from "../../store/";
 import sp from "./index.module.css";
 import { MdContentCopy } from "react-icons/md";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
+// import { set } from "immer/dist/internal";
 
+const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 function AddTrainRequest(props) {
   const {addRequest}=props
 
@@ -23,6 +26,7 @@ function AddTrainRequest(props) {
   const [np, setNp] = useState(0);
   const clients = ["org1", "org2", "org3"];
   const [cmd, setCmd] = useState("");
+  const [id,setId]=useState("")
 
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
@@ -53,18 +57,21 @@ function AddTrainRequest(props) {
     let c = `python client.py --task ${taskName} --dataset ${dataset} --model ${model} --aggr ${agr} --num_com ${np}`;
     setCmd(c);
     let date = new Date();
-    let new_id=nanoid()
-    const newTask = {
-      id: new_id,
+    let newTask = {
       task: taskName,
       rounds: np,
-      status: 1,
       client: client,
       model:model,
       metrics: dataset,
-      lastUpdate:
-        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
     };
+    
+    // post 
+		axios.post(`${BACKEND_API_PREFIX}/start/training/server`, newTask)
+		.then( (res) => {
+			setId(res.data)
+      newTask.id=id
+      newTask.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+		})
     addRequest(newTask)
   }
   const [copied, setCopied] = useState(false);
@@ -72,6 +79,7 @@ function AddTrainRequest(props) {
     navigator.clipboard.writeText(cmd);
     setCopied(true);
   }
+
 
   return (
     <div className={sp.layout}>

@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import sp from "../AddTrainQuest/index.module.css";
 
 function AddStation(props) {
-  const { addStation,handleClose } = props;
+  const { addStation,handleClose,user } = props;
 
   const [dataset, setDataset] = useState("");
   const [datatype, setDatatype] = useState("");
@@ -53,6 +53,12 @@ function AddStation(props) {
         return { ...state };
     }
   });
+useEffect(() => {
+  setOwner(user.username)
+
+  return () => {
+  }
+}, [])
 
   function onConfirm() {
     let new_id = nanoid();
@@ -88,6 +94,7 @@ function AddStation(props) {
         <input
           className={sp.enter}
           type="text"
+          value={owner}
           onKeyUp={(e) => dispatch({ type: "OWNER", value: e.target.value })}
         />
       </div>

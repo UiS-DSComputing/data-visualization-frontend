@@ -36,7 +36,6 @@ function FL() {
     loadAllFiles();
   }, []);
 
-
   return (
     <div>
       <Table />
@@ -44,67 +43,89 @@ function FL() {
   );
 }
 function Table() {
+  const dispatch1 = useDispatch();
+  const navigate = useNavigate();
+  const BACKEND_API_PREFIX =
+    process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
   const [pop, setPop] = useState(false);
-  const date = new Date();
-  const [testTasks, setTask] = useState([
-    {
-      id: "sygak7319731g12ygdak82",
-      task: "task1",
-      rounds: 1,
-      status: 1,
-      client: "client1",
-      model: "a",
-      metrics: "m1",
-      lastUpdate:
-        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
-    },
-    {
-      id: "2371gdjaskygd879234",
-      task: "task2",
-      rounds: 1,
-      status: 0,
-      client: "client1",
-      model: "a",
-      metrics: "m1",
-      lastUpdate:
-        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
-    },
-    {
-      id: "3178413yhdkasfhliasd22",
-      task: "task3",
-      rounds: 3,
-      status: 2,
-      client: "client1",
-      model: "a",
-      metrics: "m1",
-      lastUpdate:
-        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
-    },
-  ]);
+  // all the tasks
+  const [allTasks, setAllTasks] = useState([]);
+  // tasks for filter
+  const [showTasks, setShowTasks] = useState([]);
   const status = [
     {
+      id:3,
+      value:"All"
+    },
+    {
       id: 0,
-      value: "running",
+      value: "Running",
       color: "#278327",
     },
     {
       id: 1,
-      value: "stopped",
+      value: "Stopped",
       color: "#a34242",
     },
     {
       id: 2,
-      value: "waiting",
+      value: "Finished",
       color: "#f1ca58",
-    },
+    }
   ];
+  const [type, setType] = useState("All")
   function PopUp(is) {
     setPop(is);
   }
   function addRequest(r) {
-    let tmptasks = testTasks;
+    let tmptasks = allTasks;
     tmptasks.push(r);
-    setTask(tmptasks);
+    setAllTasks(tmptasks);
+    setShowTasks(tmptasks);
+  }
+  const getStatus = async (id) => {
+    try {
+      await axios.get(`${BACKEND_API_PREFIX}/status/${id}`).then((res) => {
+        return res.data;
+      });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  useEffect(() => {
+    let date = new Date();
+    const interval = setInterval(() => {
+      let tmp = allTasks.map((task) => {
+        // string into number
+        // running->0, stopped->1, finished->2
+        task.status = getStatus(task.id);
+        task.lastUpdate =
+          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return task;
+      });
+      setAllTasks(tmp);
+      setShowTasks(tmp);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleFilter(type) {
+    let tmp = [];
+    if (type == "Running") {
+      tmp = allTasks.filter((task) => task.status == 0);
+    } else if (type == "Stopped") {
+      tmp = allTasks.filter((task) => task.status == 1);
+    } else if(type=="Finished"){
+      tmp = allTasks.filter((task) => task.status == 2);
+    }else{
+      tmp=allTasks
+    }
+    setShowTasks(tmp);
+    setType(type)
   }
   return (
     <div>
@@ -113,9 +134,24 @@ function Table() {
           <div style={{ border: "none", fontSize: "1.2em" }}>
             Requested Trains
           </div>
-          <div className={fl.checked_sw}>All</div>
-          <div>Finished</div>
-          <div>Running</div>
+          <div className={fl.radio_toolbar} name="model" id="model">
+            {status.map((item) => {
+              return (
+                <label
+                  key={item.value}
+                  className={item.value === type ? fl.checked : fl.normal}
+                >
+                  <input
+                    type="radio"
+                    value={item.value}
+                    name="model"
+                    onClick={() => handleFilter(item.value)}
+                  />
+                  {item.value}
+                </label>
+              );
+            })}
+          </div>
         </div>
         <div className={fl.newbtn} onClick={() => PopUp(true)}>
           <GrAddCircle color="white" />
@@ -133,11 +169,11 @@ function Table() {
             <th>Clients</th>
             <th>Global Model</th>
             <th>Metrics</th>
-            <th>Last Updates </th>
+            <th>Last Update</th>
           </tr>
         </thead>
         <tbody>
-          {testTasks.map((item, i) => {
+          {allTasks.map((item, i) => {
             return (
               <tr key={i}>
                 <td>{i}</td>

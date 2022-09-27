@@ -55,3 +55,46 @@
     background-color: #717171;
     color: white;
   }
+
+
+  .radio_toolbar{
+    display: flex;
+    align-items: center;
+}
+
+.checked {
+    border: 1px solid #3366ff;
+    color: white;
+    background-color: #3366ff;
+}
+.normal{
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+}
+
+.select{
+        /* padding: 10px; */
+    /* width: 200px; */
+    border: 1px solid rgb(59, 114, 185);
+    border-radius: 0.5em;
+    /* font-weight: bold; */
+    /* font-size: 1rem; */
+    padding: 0.1em 0.5em;
+}
+
+.radio_toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+  }
+
+  .radio_toolbar label {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    /* font-family: sans-serif, Arial; */
+    /* font-size: 16px; */
+    /* border-radius: 4px; */
+    border:none;
+    margin-right: 1em;
+}

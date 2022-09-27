@@ -1,0 +1,22 @@
+.layout{
+    display: flex;
+}
+.results{
+    flex-grow: 6;
+}
+.filters{
+    flex-grow: 1;
+}
+.filter{
+    border: 1px solid #b4b3b3;
+    border-radius: 0.5em;
+    padding: 1em;
+    margin: 0 2em 2em 0;
+}
+.items{
+    height: 10em;
+    overflow: scroll;
+}
+.title{
+    font-size: 1.5em;
+}

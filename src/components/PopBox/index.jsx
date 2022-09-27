@@ -6,7 +6,7 @@ import AddTrainRequest from "../AddTrainQuest";
 import AddStation from "../AddStation";
 
 export default function PopBox(props) {
-  const {PopUp,addRequest,type,addStation}=props
+  const {PopUp,addRequest,type,addStation,user}=props
   function handleClose(is){
     PopUp(is)
   }
@@ -22,7 +22,7 @@ export default function PopBox(props) {
           ></span>
         </div>
         {
-          type=="station"?<AddStation addStation={addStation} handleClose={handleClose}/>:<AddTrainRequest addRequest={addRequest} />
+          type=="station"?<AddStation addStation={addStation} handleClose={handleClose} user={user}/>:<AddTrainRequest addRequest={addRequest} />
         }
       </div>
     </div>
