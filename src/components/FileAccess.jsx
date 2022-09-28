@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../store";
 const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
+  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 const FileAccess = () => {
 
   const user_id = useSelector((state) => state.user_id);

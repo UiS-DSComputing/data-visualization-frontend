@@ -11,7 +11,7 @@ import { MdContentCopy } from "react-icons/md";
 // import { set } from "immer/dist/internal";
 
 const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
+  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 function AddTrainRequest(props) {
   const {addRequest}=props
 

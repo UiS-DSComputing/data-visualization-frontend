@@ -7,7 +7,7 @@ import Slider from "./common//MultiRangeSlider";
 import BarChart from "./common/BarChart";
 import LineChart from "./common/LineChart";
 const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
+  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 const FileDataViewer = (props) => {
   const token = useSelector((state) => state.accessToken);
 

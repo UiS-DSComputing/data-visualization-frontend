@@ -47,31 +47,10 @@ function Table() {
   const dispatch1 = useDispatch();
   const navigate = useNavigate();
   const BACKEND_API_PREFIX =
-    process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
+    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([
-    {
-      id: "shsshs",
-      task: "task1",
-      status: 1,
-    },
-    {
-      id: "shsshs",
-      task: "task1",
-      status: 2,
-    },
-    {
-      id: "shsshs",
-      task: "task1",
-      status: 3,
-    },
-    {
-      id: "shsshs",
-      task: "task1",
-      status: 0,
-    },
-  ]);
+  const [allTasks, setAllTasks] = useState([]);
   // tasks for filter
   const [showTasks, setShowTasks] = useState([]);
   const status = [
@@ -134,22 +113,22 @@ function Table() {
     }
   };
 
-  // useEffect(() => {
-  //   let date = new Date();
-  //   const interval = setInterval(() => {
-  //     let tmp = allTasks.map((task) => {
-  //       // string into number
-  //       // running->0, stopped->1, finished->2
-  //       task.status = getStatus(task.id);
-  //       task.lastUpdate =
-  //         date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-  //       return task;
-  //     });
-  //     setAllTasks(tmp);
-  //     setShowTasks(tmp);
-  //   }, 60000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    let date = new Date();
+    const interval = setInterval(() => {
+      let tmp = allTasks.map((task) => {
+        // string into number
+        // running->0, stopped->1, finished->2
+        task.status = getStatus(task.id);
+        task.lastUpdate =
+          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return task;
+      });
+      setAllTasks(tmp);
+      setShowTasks(tmp);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   function handleFilter(type) {
     let tmp = [];
