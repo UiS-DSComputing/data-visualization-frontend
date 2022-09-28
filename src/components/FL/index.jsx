@@ -10,32 +10,16 @@ import PopBox from "../PopBox";
 import { GrClose } from "react-icons/gr";
 
 function FL() {
-  const user_id = useSelector((state) => state.user_id);
-  const navigate = useNavigate();
+  // const user_id = useSelector((state) => state.user_id);
+  // const navigate = useNavigate();
   const token = useSelector((state) => state.accessToken);
-  const [allFiles, setAllFiles] = useState([]);
-  const dispatch1 = useDispatch();
+  // const [allFiles, setAllFiles] = useState([]);
+  // const dispatch1 = useDispatch();
 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  const loadAllFiles = async () => {
-    try {
-      await axios
-        .get(`http://localhost:8000/file-collection/${user_id}`, config)
-        .then((res) => {
-          setAllFiles(res.data);
-        });
-    } catch (err) {
-      if (err.response.status === 401) {
-        dispatch1(authActions.logout());
-        navigate("/login");
-      }
-    }
-  };
-  useEffect(() => {
-    loadAllFiles();
-  }, []);
+
 
   return (
     <div>
@@ -50,9 +34,22 @@ function Table() {
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState([
+    // {
+    //   ip:"161.97.133.43",
+    //   port:40125,
+    //   id:"2b6075c52c4d0c0d8a8d4af1b773b4a607db7c819145c5ad16fc8b740c4c559c",
+    //   link:"/download/test.zip",
+    //   task: "task1", 
+    //   rounds: "10", 
+    //   client: "org1",
+    //    model: "ResNet", 
+    //    status: 3,
+    //    metrics: "CIFAR100"
+    // }
+  ]);
   // tasks for filter
-  const [showTasks, setShowTasks] = useState([]);
+  // const [showTasks, setShowTasks] = useState([]);
   const status = [
     {
       id: 0,
@@ -91,19 +88,56 @@ function Table() {
   function handleCheck(task) {
     setShowCmd(true);
     setCmdTask(task);
+    console.log(task)
   }
   function addRequest(r) {
     let tmptasks = allTasks;
     tmptasks.push(r);
     setAllTasks(tmptasks);
-    setShowTasks(tmptasks);
+    console.log("add")
+    console.log(allTasks)
+    // setShowTasks(tmptasks);
+  }
+
+  function updateTask(task){
+    let date=new Date()
+    let tmptasks=allTasks.map((item)=>{
+      if(item.showId===task.showId){
+        item.id=task.id
+        item.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+        item.link=task.link
+        item.ip=task.ip
+        item.port=task.port
+      }
+      return item
+    })
+    console.log("update")
+    setAllTasks(tmptasks)
+    console.log(allTasks)
   }
   const getStatus = async (id) => {
+    let date = new Date();
     try {
       await axios
         .get(`${BACKEND_API_PREFIX}/training/status/${id}`)
         .then((res) => {
-          return res.data;
+          let tmp = allTasks.map((task) => {
+            // string into number
+            // running->0, stopped->1, finished->2
+            let status=res.data.status  
+            if(status==="running"){
+              task.status = 0
+            }else if(status==="stopped"){
+              task.status=1
+            }else{
+              task.status=2
+            }
+            task.lastUpdate = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            return task;
+          });
+          setAllTasks(tmp);
+          // console.log("eff")
+          // console.log(allTasks)
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -114,20 +148,18 @@ function Table() {
   };
 
   useEffect(() => {
-    let date = new Date();
-    const interval = setInterval(() => {
-      let tmp = allTasks.map((task) => {
-        // string into number
-        // running->0, stopped->1, finished->2
-        task.status = getStatus(task.id);
-        task.lastUpdate =
-          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-        return task;
-      });
-      setAllTasks(tmp);
-      setShowTasks(tmp);
-    }, 60000);
-    return () => clearInterval(interval);
+    if(allTasks.length>0 && allTasks[0].id!==null){
+      const interval = setInterval(() => {
+        let tmp = allTasks.map((task) => {
+          // string into number
+          // running->0, stopped->1, finished->2
+         getStatus(task.id);
+        
+        });
+        // setShowTasks(tmp);
+      }, 60000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   function handleFilter(type) {
@@ -141,7 +173,7 @@ function Table() {
     } else {
       tmp = allTasks;
     }
-    setShowTasks(tmp);
+    // setShowTasks(tmp);
     setType(type);
   }
 
@@ -149,7 +181,7 @@ function Table() {
     try {
       await axios({
         type: "get",
-        url: `${BACKEND_API_PREFIX}/download/${link}`,
+        url: `${BACKEND_API_PREFIX}${link}`,
         responseType: "blob",
       }).then((res) => {
         const href = URL.createObjectURL(res.data);
@@ -222,7 +254,7 @@ function Table() {
             return (
               <tr key={i}>
                 <td>{i}</td>
-                <td onClick={() => handleCheck(item)}>{item.id}</td>
+                <td onClick={() => handleCheck(item)}>{item.showId}</td>
                 <td>{item.task}</td>
                 <td>{item.rounds}</td>
                 <td
@@ -237,7 +269,7 @@ function Table() {
                 <td>{item.model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
-                <td onClick={() => handleDownload(item.id)}>
+                <td onClick={() => handleDownload(item.link)}>
                   <IoDownloadOutline />
                 </td>
               </tr>
@@ -245,7 +277,7 @@ function Table() {
           })}
         </tbody>
       </table>
-      {pop && <PopBox PopUp={PopUp} type={"request"} addRequest={addRequest} />}
+      {pop && <PopBox PopUp={PopUp} type={"request"} addRequest={addRequest} updateTask={updateTask} />}
       {showCmd && <PopCmd handlePopcmd={handlePopcmd} cmdTask={cmdTask} />}
     </div>
   );
@@ -256,7 +288,7 @@ function PopCmd(props) {
   function handleClose() {
     handlePopcmd(false);
   }
-  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.dataset} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.np}`;
+  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
 
 
   const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
@@ -275,10 +307,10 @@ function PopCmd(props) {
         <div className={fl.cmdlayout}>
           <div>For client:</div>
           <div className={fl.cmd}>{client}</div>
-          <div>For Windows user (POWERSHELL ONLY):</div>
+          <div>For Unix user:</div>
           <div className={fl.cmd}>
             <p>
-              example: <span>{win}</span>
+              example: <span>{unix}</span>
             </p>
             <p>parameters:</p>
             <p>
@@ -301,10 +333,10 @@ function PopCmd(props) {
               <span>-H</span>help
             </p>
           </div>
-          <div>For Unix user:</div>
+          <div>For Windows user (POWERSHELL ONLY):</div>
           <div className={fl.cmd}>
             <p>
-              example: <span>{unix}</span>
+              example: <span>{win}</span>
             </p>
             <p>parameters:</p>
             <p>

@@ -1,19 +1,14 @@
 import axios from "axios";
-// import { map } from "jquery";
 import React, { useEffect, useRef, useState, useReducer } from "react";
-// import { GrAction } from "react-icons/gr";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-// import { authActions } from "../../store/";
 import sp from "./index.module.css";
 import { MdContentCopy } from "react-icons/md";
-// import { nanoid } from "nanoid";
+import { nanoid } from "nanoid";
 // import { set } from "immer/dist/internal";
 
 const BACKEND_API_PREFIX =
   process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 function AddTrainRequest(props) {
-  const {addRequest}=props
+  const {addRequest,updateTask}=props
 
   const [taskName, setTaskName] = useState("task1");
   const [model, setModel] = useState("");
@@ -26,7 +21,6 @@ function AddTrainRequest(props) {
   const [np, setNp] = useState(0);
   const clients = ["org1", "org2", "org3"];
   const [cmd, setCmd] = useState("");
-  const [id,setId]=useState("")
 
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
@@ -57,33 +51,39 @@ function AddTrainRequest(props) {
     let c = `python client.py --task ${taskName} --dataset ${dataset} --model ${model} --aggr ${agr} --num_com ${np}`;
     setCmd(c);
     let date = new Date();
+    let showid=nanoid()
     // initial status : waiting
     let newTask = {
+      showId:showid,
       task: taskName,
       rounds: np,
       client: client,
       model:model,
       status:3,
       metrics: dataset,
+      agr:agr,
+      lastUpdate:date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     };
     
     // post 
 		axios({ method: 'post',
       url:`${BACKEND_API_PREFIX}/start/training/server`, 
-      timeout:300000,
+      timeout:3000000,
       data:newTask
     })
-		.then( (res) => {
-			setId(res.data.id)
-      newTask.id=id
-      newTask.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+		.then((res) => {
+      newTask.id=res.data.id
       newTask.link=res.data.link
       newTask.ip=res.data.ip
       newTask.port=res.data.port
+      console.log(newTask)
+      updateTask(newTask)
 		})
     addRequest(newTask)
   }
+
   const [copied, setCopied] = useState(false);
+  
   function handleCopy(e) {
     navigator.clipboard.writeText(cmd);
     setCopied(true);
