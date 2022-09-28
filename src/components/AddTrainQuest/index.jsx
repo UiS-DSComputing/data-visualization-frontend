@@ -22,7 +22,7 @@ function AddTrainRequest(props) {
   const models = ["CNN", "ResNet18", "ResNet", "50", "VGG19"];
   const dbs = ["MINIST", "CIFAR10", "CIFAR100"];
   const agrs = ["FedSGD", "FedAVG"];
-  const [client, setClient] = useState("");
+  const [client, setClient] = useState("org1");
   const [np, setNp] = useState(0);
   const clients = ["org1", "org2", "org3"];
   const [cmd, setCmd] = useState("");
@@ -57,20 +57,27 @@ function AddTrainRequest(props) {
     let c = `python client.py --task ${taskName} --dataset ${dataset} --model ${model} --aggr ${agr} --num_com ${np}`;
     setCmd(c);
     let date = new Date();
+    // initial status : waiting
     let newTask = {
       task: taskName,
       rounds: np,
       client: client,
       model:model,
+      status:2,
       metrics: dataset,
     };
     
     // post 
-		axios.post(`${BACKEND_API_PREFIX}/start/training/server`, newTask)
+		axios({ method: 'post',
+      url:`${BACKEND_API_PREFIX}/start/training/server`, 
+      timeout:8000,
+      data:newTask
+    })
 		.then( (res) => {
-			setId(res.data)
+			setId(res.data.id)
       newTask.id=id
       newTask.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+      newTask.link=res.data.link
 		})
     addRequest(newTask)
   }

@@ -24,8 +24,8 @@ import logo from '../../assets/uis.png'
 
 const Layout = () => {
   // const navigate = useNavigate();
-  // const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isLoggedIn=true
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  // const isLoggedIn=true
   const user_name = useSelector(state => state.user_name);
   // const token = useSelector(state => state.accessToken);
   const dispatch = useDispatch();

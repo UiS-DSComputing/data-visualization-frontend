@@ -1,7 +1,7 @@
 import axios from "axios";
 import { map } from "jquery";
 import React, { useEffect, useRef, useState, useReducer } from "react";
-import { GrAddCircle } from "react-icons/gr";
+import { IoAddCircleOutline, IoDownloadOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/";
@@ -49,28 +49,54 @@ function Table() {
     process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState([
+    {
+      id:"shsshs",
+      task:"task1",
+      status:1
+    },
+    {
+      id:"shsshs",
+      task:"task1",
+      status:2
+    },
+    {
+      id:"shsshs",
+      task:"task1",
+      status:3
+    },
+    {
+      id:"shsshs",
+      task:"task1",
+      status:0
+    }
+  ]);
   // tasks for filter
   const [showTasks, setShowTasks] = useState([]);
   const status = [
     {
-      id:3,
+      id:0,
       value:"All"
     },
     {
-      id: 0,
+      id: 1,
       value: "Running",
       color: "#278327",
     },
     {
-      id: 1,
+      id: 2,
       value: "Stopped",
       color: "#a34242",
     },
     {
-      id: 2,
+      id: 3,
       value: "Finished",
       color: "#f1ca58",
+    },
+    {
+      id: 4,
+      value: "Waiting",
+      color: "#888",
     }
   ];
   const [type, setType] = useState("All")
@@ -85,7 +111,7 @@ function Table() {
   }
   const getStatus = async (id) => {
     try {
-      await axios.get(`${BACKEND_API_PREFIX}/status/${id}`).then((res) => {
+      await axios.get(`${BACKEND_API_PREFIX}/training/status/${id}`).then((res) => {
         return res.data;
       });
     } catch (err) {
@@ -96,37 +122,63 @@ function Table() {
     }
   };
 
-  useEffect(() => {
-    let date = new Date();
-    const interval = setInterval(() => {
-      let tmp = allTasks.map((task) => {
-        // string into number
-        // running->0, stopped->1, finished->2
-        task.status = getStatus(task.id);
-        task.lastUpdate =
-          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-        return task;
-      });
-      setAllTasks(tmp);
-      setShowTasks(tmp);
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   let date = new Date();
+  //   const interval = setInterval(() => {
+  //     let tmp = allTasks.map((task) => {
+  //       // string into number
+  //       // running->0, stopped->1, finished->2
+  //       task.status = getStatus(task.id);
+  //       task.lastUpdate =
+  //         date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  //       return task;
+  //     });
+  //     setAllTasks(tmp);
+  //     setShowTasks(tmp);
+  //   }, 60000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   function handleFilter(type) {
     let tmp = [];
-    if (type == "Running") {
-      tmp = allTasks.filter((task) => task.status == 0);
-    } else if (type == "Stopped") {
-      tmp = allTasks.filter((task) => task.status == 1);
-    } else if(type=="Finished"){
-      tmp = allTasks.filter((task) => task.status == 2);
+    if (type === "Running") {
+      tmp = allTasks.filter((task) => task.status === 0);
+    } else if (type === "Stopped") {
+      tmp = allTasks.filter((task) => task.status === 1);
+    } else if(type==="Finished"){
+      tmp = allTasks.filter((task) => task.status === 2);
     }else{
       tmp=allTasks
     }
     setShowTasks(tmp);
     setType(type)
   }
+
+  const handleDownload = async (link) => {
+    try {
+      await axios({
+        type:'get',
+        url:`${BACKEND_API_PREFIX}/download/${link}`,
+        responseType: 'blob'
+      }).then((res) => {
+        const href = URL.createObjectURL(res.data);
+        const link = document.createElement('a');
+        link.href = href;
+        link.setAttribute('download', 'file.zip'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+    
+        // clean up "a" element & remove ObjectURL
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
   return (
     <div>
       <div className={fl.tools}>
@@ -154,7 +206,7 @@ function Table() {
           </div>
         </div>
         <div className={fl.newbtn} onClick={() => PopUp(true)}>
-          <GrAddCircle color="white" />
+          <IoAddCircleOutline color="white" />
           &nbsp;New Train Request
         </div>
       </div>
@@ -170,6 +222,7 @@ function Table() {
             <th>Global Model</th>
             <th>Metrics</th>
             <th>Last Update</th>
+            <th>Download</th>
           </tr>
         </thead>
         <tbody>
@@ -182,16 +235,17 @@ function Table() {
                 <td>{item.rounds}</td>
                 <td
                   style={{
-                    backgroundColor: status[item.status].color,
+                    backgroundColor: status[item.status+1].color,
                     color: "white",
                   }}
                 >
-                  {status[item.status].value}
+                  {status[item.status+1].value}
                 </td>
                 <td>{item.client}</td>
                 <td>{item.model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
+                <td onClick={handleDownload(item.id)}><IoDownloadOutline /></td>
               </tr>
             );
           })}
