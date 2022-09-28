@@ -70,7 +70,7 @@ function AddTrainRequest(props) {
     // post 
 		axios({ method: 'post',
       url:`${BACKEND_API_PREFIX}/start/training/server`, 
-      timeout:8000,
+      timeout:300000,
       data:newTask
     })
 		.then( (res) => {
