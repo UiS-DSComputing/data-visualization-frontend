@@ -98,3 +98,59 @@
     border:none;
     margin-right: 1em;
 }
+
+
+.popup_box {
+    position: fixed;
+    background: #00000050;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 999;
+  }
+  
+  .box {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    height: auto;
+    max-height: 70vh;
+    margin-top: calc(100vh - 85vh - 20px);
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #999;
+    overflow: auto;
+  }
+
+.closediv{
+  background: #ccdaf3;
+  text-align: right;
+  padding: 10px 20px;
+  position: fixed;
+  width: inherit;
+}
+
+.cmdlayout{
+    font-size: 16px;
+    padding: 2em;
+    margin:1em
+}
+
+.cmdlayout div{
+    margin:1em
+}
+
+.cmd{
+    background-color: black;
+    padding: 1em;
+    color: white;
+    border-radius: 0.5em;
+}
+
+.cmd span{
+    background-color: #737272;
+    padding: 0.2em 0.5em;
+    border-radius: 0.2em;
+    margin: 0 1em;
+}

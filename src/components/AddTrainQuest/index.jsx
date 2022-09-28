@@ -63,7 +63,7 @@ function AddTrainRequest(props) {
       rounds: np,
       client: client,
       model:model,
-      status:2,
+      status:3,
       metrics: dataset,
     };
     
@@ -78,6 +78,8 @@ function AddTrainRequest(props) {
       newTask.id=id
       newTask.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
       newTask.link=res.data.link
+      newTask.ip=res.data.ip
+      newTask.port=res.data.port
 		})
     addRequest(newTask)
   }
