@@ -20,7 +20,6 @@ function FL() {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-
   return (
     <div>
       <Table />
@@ -40,10 +39,10 @@ function Table() {
     //   port:40125,
     //   id:"2b6075c52c4d0c0d8a8d4af1b773b4a607db7c819145c5ad16fc8b740c4c559c",
     //   link:"/download/test.zip",
-    //   task: "task1", 
-    //   rounds: "10", 
+    //   task: "task1",
+    //   rounds: "10",
     //   client: "org1",
-    //    model: "ResNet", 
+    //    model: "ResNet",
     //    status: 3,
     //    metrics: "CIFAR100"
     // }
@@ -88,33 +87,36 @@ function Table() {
   function handleCheck(task) {
     setShowCmd(true);
     setCmdTask(task);
-    console.log(task)
+    console.log(task);
   }
+
   function addRequest(r) {
     let tmptasks = allTasks;
     tmptasks.push(r);
     setAllTasks(tmptasks);
-    console.log("add")
-    console.log(allTasks)
+    console.log("add");
+    console.log(allTasks);
     // setShowTasks(tmptasks);
   }
 
-  function updateTask(task){
-    let date=new Date()
-    let tmptasks=allTasks.map((item)=>{
-      if(item.showId===task.showId){
-        item.id=task.id
-        item.lastUpdate=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-        item.link=task.link
-        item.ip=task.ip
-        item.port=task.port
+  function updateTask(task) {
+    let date = new Date();
+    const tmptasks = allTasks.map((item) => {
+      if (item.showId === task.showId) {
+        item.id = task.id;
+        item.lastUpdate =
+          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        item.link = task.link;
+        item.ip = task.ip;
+        item.port = task.port;
       }
-      return item
-    })
-    console.log("update")
-    setAllTasks(tmptasks)
-    console.log(allTasks)
+      return item;
+    });
+    console.log("update");
+    setAllTasks(tmptasks);
+    console.log(allTasks);
   }
+
   const getStatus = async (id) => {
     let date = new Date();
     try {
@@ -124,20 +126,23 @@ function Table() {
           let tmp = allTasks.map((task) => {
             // string into number
             // running->0, stopped->1, finished->2
-            let status=res.data.status  
-            if(status==="running"){
-              task.status = 0
-            }else if(status==="stopped"){
-              task.status=1
-            }else{
-              task.status=2
+            let status = res.data.status;
+            if (status === "running") {
+              task.status = 0;
+            } else if (status === "stopped") {
+              task.status = 1;
+            } else {
+              task.status = 2;
             }
-            task.lastUpdate = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            task.lastUpdate =
+              date.getHours() +
+              ":" +
+              date.getMinutes() +
+              ":" +
+              date.getSeconds();
             return task;
           });
           setAllTasks(tmp);
-          // console.log("eff")
-          // console.log(allTasks)
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -148,16 +153,15 @@ function Table() {
   };
 
   useEffect(() => {
-    if(allTasks.length>0 && allTasks[0].id!==null){
+    if (allTasks.length > 0 && allTasks[0].id !== null) {
       const interval = setInterval(() => {
         let tmp = allTasks.map((task) => {
           // string into number
           // running->0, stopped->1, finished->2
-         getStatus(task.id);
-        
+          getStatus(task.id);
         });
         // setShowTasks(tmp);
-      }, 60000);
+      }, 30000);
       return () => clearInterval(interval);
     }
   }, []);
@@ -277,7 +281,14 @@ function Table() {
           })}
         </tbody>
       </table>
-      {pop && <PopBox PopUp={PopUp} type={"request"} addRequest={addRequest} updateTask={updateTask} />}
+      {pop && (
+        <PopBox
+          PopUp={PopUp}
+          type={"request"}
+          addRequest={addRequest}
+          updateTask={updateTask}
+        />
+      )}
       {showCmd && <PopCmd handlePopcmd={handlePopcmd} cmdTask={cmdTask} />}
     </div>
   );
@@ -285,14 +296,14 @@ function Table() {
 
 function PopCmd(props) {
   const { handlePopcmd, cmdTask } = props;
+
   function handleClose() {
     handlePopcmd(false);
   }
   const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
 
-
-  const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
-  const unix = `bash run.sh -h ${cmdTask.ip} -p ${cmdTask.ip}`;
+  const win = `./run.ps1 -ip 127.0.0.1 -port 12345`;
+  const unix = `bash run.sh -h 127.0.0.1 -p 12345`;
   return (
     <div className={fl.popup_box}>
       <div className={fl.box}>
@@ -346,14 +357,15 @@ function PopCmd(props) {
               <span>-port</span>server port, eg. -port 12345
             </p>
             <p>
-              <span>-volume</span>data volume, could be volume name or local path,
-              eg. -volume /data
+              <span>-volume</span>data volume, could be volume name or local
+              path, eg. -volume /data
             </p>
             <p>
               <span>-image</span>image name, eg. -image image_name
             </p>
             <p>
-              <span>-container</span>container name, eg. -container container_name
+              <span>-container</span>container name, eg. -container
+              container_name
             </p>
             <p>
               <span>-help</span>help

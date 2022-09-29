@@ -22,7 +22,7 @@ export default function PopBox(props) {
           ></span>
         </div>
         {
-          type=="station"?<AddStation addStation={addStation} handleClose={handleClose} user={user}/>:<AddTrainRequest addRequest={addRequest} />
+          type==="station"?<AddStation addStation={addStation} handleClose={handleClose} user={user}/>:<AddTrainRequest addRequest={addRequest}  handleClose={handleClose}/>
         }
       </div>
     </div>

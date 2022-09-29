@@ -7,8 +7,10 @@ import { nanoid } from "nanoid";
 
 const BACKEND_API_PREFIX =
   process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+
 function AddTrainRequest(props) {
-  const {addRequest,updateTask}=props
+
+  const {addRequest,updateTask,handleClose}=props
 
   const [taskName, setTaskName] = useState("task1");
   const [model, setModel] = useState("");
@@ -47,9 +49,27 @@ function AddTrainRequest(props) {
     }
   });
 
+  const addNewRequest = async (newTask) => {
+    let date = new Date();
+      await axios({ method: 'post',
+      url:`${BACKEND_API_PREFIX}/start/training/server`, 
+      timeout:3000000,
+      data:newTask
+    })
+		.then((res) => {
+      newTask.id=res.data.id
+      newTask.link=res.data.link
+      newTask.ip=res.data.ip
+      newTask.port=res.data.port
+      newTask.updateTask=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+      console.log("update")
+      console.log(newTask)
+      updateTask(newTask)
+		})
+    
+  };
+
   function onConfirm() {
-    let c = `python client.py --task ${taskName} --dataset ${dataset} --model ${model} --aggr ${agr} --num_com ${np}`;
-    setCmd(c);
     let date = new Date();
     let showid=nanoid()
     // initial status : waiting
@@ -65,25 +85,28 @@ function AddTrainRequest(props) {
       lastUpdate:date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     };
     
-    // post 
-		axios({ method: 'post',
-      url:`${BACKEND_API_PREFIX}/start/training/server`, 
-      timeout:3000000,
-      data:newTask
-    })
-		.then((res) => {
-      newTask.id=res.data.id
-      newTask.link=res.data.link
-      newTask.ip=res.data.ip
-      newTask.port=res.data.port
-      console.log(newTask)
-      updateTask(newTask)
-		})
+    // // post 
+		// axios({ method: 'post',
+    //   url:`${BACKEND_API_PREFIX}/start/training/server`, 
+    //   timeout:3000000,
+    //   data:newTask
+    // })
+		// .then((res) => {
+    //   newTask.id=res.data.id
+    //   newTask.link=res.data.link
+    //   newTask.ip=res.data.ip
+    //   newTask.port=res.data.port
+    //   console.log("update")
+    //   console.log(newTask)
+    //   updateTask(newTask)
+		// })
     addRequest(newTask)
+    addNewRequest(newTask)
+    handleClose(false)
   }
 
   const [copied, setCopied] = useState(false);
-  
+
   function handleCopy(e) {
     navigator.clipboard.writeText(cmd);
     setCopied(true);
@@ -187,7 +210,7 @@ function AddTrainRequest(props) {
           Confirm
         </button>
       </div>
-      {cmd != "" && (
+      {/* {cmd != "" && (
         <div className={sp.cmd}>
           {cmd}{" "}
           <MdContentCopy
@@ -196,7 +219,7 @@ function AddTrainRequest(props) {
           />
         </div>
       )}
-      {copied && <div className={sp.copy}>Copied!</div>}
+      {copied && <div className={sp.copy}>Copied!</div>} */}
     </div>
   );
 }
