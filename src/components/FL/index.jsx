@@ -35,17 +35,21 @@ function Table() {
   // all the tasks
   const [allTasks, setAllTasks] = useState([
     // {
-    //   ip:"161.97.133.43",
-    //   port:40125,
-    //   id:"2b6075c52c4d0c0d8a8d4af1b773b4a607db7c819145c5ad16fc8b740c4c559c",
-    //   link:"/download/test.zip",
-    //   task: "task1",
-    //   rounds: "10",
+    //   agr: "FedSGD",
     //   client: "org1",
-    //    model: "ResNet",
-    //    status: 3,
-    //    metrics: "CIFAR100"
-    // }
+    //   id: "4399105c2fa697152008408bd716326b7d668cf5227341c25df2615bbed0d198",
+    //   ip: "161.97.133.43",
+    //   lastUpdate: "12:32:24",
+    //   link: "/download/1126141801065182034.zip",
+    //   metrics: "MINIST",
+    //   model: "CNN",
+    //   port: 54399,
+    //   rounds: "1",
+    //   showId: "wyOndcLKzTXzkgJnUhL3F",
+    //   status: 0,
+    //   task: "task1",
+    //   updateTask: "12:28:34",
+    // },
   ]);
   // tasks for filter
   // const [showTasks, setShowTasks] = useState([]);
@@ -53,6 +57,7 @@ function Table() {
     {
       id: 0,
       value: "All",
+      color: "black",
     },
     {
       id: 1,
@@ -87,15 +92,36 @@ function Table() {
   function handleCheck(task) {
     setShowCmd(true);
     setCmdTask(task);
-    console.log(task);
   }
 
-  function addRequest(r) {
-    let tmptasks = allTasks;
-    tmptasks.push(r);
-    setAllTasks(tmptasks);
-    console.log("add");
-    console.log(allTasks);
+  function addRequest(type, task) {
+    if (type === 0) {
+      // add new request
+      let tmptasksn = allTasks;
+      tmptasksn.push(task);
+      setAllTasks(tmptasksn);
+      console.log("add");
+      console.log(allTasks);
+    } else {
+      // update exist request
+      let date = new Date();
+      const tmptasks = allTasks.map((item) => {
+        if (item.showId === task.showId) {
+          item.id = task.id;
+          item.lastUpdate =
+            date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+          item.link = task.link;
+          item.ip = task.ip;
+          item.port = task.port;
+          return item;
+        } else {
+          return item;
+        }
+      });
+      console.log("update");
+      setAllTasks(tmptasks);
+      console.log(allTasks);
+    }
     // setShowTasks(tmptasks);
   }
 
@@ -109,40 +135,43 @@ function Table() {
         item.link = task.link;
         item.ip = task.ip;
         item.port = task.port;
+        return item;
       }
-      return item;
     });
     console.log("update");
     setAllTasks(tmptasks);
     console.log(allTasks);
   }
 
-  const getStatus = async (id) => {
+  const getStatus = async (task) => {
     let date = new Date();
     try {
       await axios
-        .get(`${BACKEND_API_PREFIX}/training/status/${id}`)
+        .get(`${BACKEND_API_PREFIX}/training/status/${task.id}`)
         .then((res) => {
-          let tmp = allTasks.map((task) => {
-            // string into number
-            // running->0, stopped->1, finished->2
-            let status = res.data.status;
-            if (status === "running") {
-              task.status = 0;
-            } else if (status === "stopped") {
-              task.status = 1;
+          // string into number
+          // running->0, stopped->1, finished->2
+          console.log("send update status request");
+          let status = res.data.status;
+          if (status === "running") {
+            task.status = 0;
+          } else if (status === "stopped") {
+            task.status = 1;
+          } else {
+            task.status = 2;
+          }
+          task.lastUpdate =
+            date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+          let tmp = allTasks.map((item) => {
+            if (item.id === task.id) {
+              return task;
             } else {
-              task.status = 2;
+              return item;
             }
-            task.lastUpdate =
-              date.getHours() +
-              ":" +
-              date.getMinutes() +
-              ":" +
-              date.getSeconds();
-            return task;
           });
           setAllTasks(tmp);
+          console.log(allTasks)
+          return task;
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -153,17 +182,22 @@ function Table() {
   };
 
   useEffect(() => {
-    if (allTasks.length > 0 && allTasks[0].id !== null) {
-      const interval = setInterval(() => {
-        let tmp = allTasks.map((task) => {
-          // string into number
-          // running->0, stopped->1, finished->2
-          getStatus(task.id);
+    console.log(allTasks.length);
+    const interval = setInterval(() => {
+      if (allTasks.length > 0) {
+        console.log("update status");
+        const tmp = allTasks.map((task) => {
+          if (task.id !== undefined) {
+            console.log("update status single", task.id);
+            let taskk = getStatus(task);
+          } else {
+          }
         });
-        // setShowTasks(tmp);
-      }, 30000);
-      return () => clearInterval(interval);
-    }
+      }
+      // setShowTasks(tmp);
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   function handleFilter(type) {
@@ -263,11 +297,11 @@ function Table() {
                 <td>{item.rounds}</td>
                 <td
                   style={{
-                    backgroundColor: status[item.status + 1].color,
+                    backgroundColor: status[parseInt(item.status) + 1].color,
                     color: "white",
                   }}
                 >
-                  {status[item.status + 1].value}
+                  {status[parseInt(item.status) + 1].value}
                 </td>
                 <td>{item.client}</td>
                 <td>{item.model}</td>
@@ -302,8 +336,8 @@ function PopCmd(props) {
   }
   const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
 
-  const win = `./run.ps1 -ip 127.0.0.1 -port 12345`;
-  const unix = `bash run.sh -h 127.0.0.1 -p 12345`;
+  const win = `./run.ps1 -ip 127.0.0.1 -port ${cmdTask.port}`;
+  const unix = `bash run.sh -h 127.0.0.1 -p ${cmdTask.port}`;
   return (
     <div className={fl.popup_box}>
       <div className={fl.box}>

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState, useReducer } from "react";
 import sp from "./index.module.css";
 import { MdContentCopy } from "react-icons/md";
 import { nanoid } from "nanoid";
-// import { set } from "immer/dist/internal";
+
 
 const BACKEND_API_PREFIX =
   process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
@@ -53,7 +53,7 @@ function AddTrainRequest(props) {
     let date = new Date();
       await axios({ method: 'post',
       url:`${BACKEND_API_PREFIX}/start/training/server`, 
-      timeout:3000000,
+      timeout:300000,
       data:newTask
     })
 		.then((res) => {
@@ -62,9 +62,8 @@ function AddTrainRequest(props) {
       newTask.ip=res.data.ip
       newTask.port=res.data.port
       newTask.updateTask=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-      console.log("update")
-      console.log(newTask)
-      updateTask(newTask)
+      console.log("update send")
+      addRequest(1,newTask)
 		})
     
   };
@@ -100,7 +99,7 @@ function AddTrainRequest(props) {
     //   console.log(newTask)
     //   updateTask(newTask)
 		// })
-    addRequest(newTask)
+    addRequest(0,newTask)
     addNewRequest(newTask)
     handleClose(false)
   }
