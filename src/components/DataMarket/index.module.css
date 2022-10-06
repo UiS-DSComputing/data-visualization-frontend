@@ -3,7 +3,7 @@
     justify-content: space-between;
 }
 .results{
-   width:60%
+   width:70%
 }
 .filters{
     width:25%
@@ -62,4 +62,19 @@
     border-radius: 0.3em;
     margin: 1em 0 0;
     color: #434141;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #c8c7c7;
+}
+
+.row_info{
+    margin:2em
+}
+
+.row_title{
+    color:#2e5ae0
 }

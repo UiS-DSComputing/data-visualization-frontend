@@ -1,7 +1,12 @@
 import React from "react";
+import { useState } from "react";
 import dm from "./index.module.css";
+import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
+import logo from "../../assets/uis.png";
+
 function DataMarket() {
+  
   const moTypes = [
     { name: "Images", number: 1289 },
     { name: "Video", number: 678 },
@@ -26,6 +31,66 @@ function DataMarket() {
     { name: "French", number: 108 },
     { name: "Spanish", number: 91 },
   ];
+  const datas = [
+    {
+      id: 1,
+      img: logo,
+      title: "CIFAR10",
+      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      mod: "Images",
+      lang: "Chinese",
+    },
+    {
+      id: 2,
+      img: logo,
+      title: "CIFAR10",
+      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      mod: "Texts",
+      lang: "English",
+    },
+    {
+      id: 3,
+      img: logo,
+      title: "IMAGEnet",
+      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      mod: "Images",
+      lang: "English",
+    },
+    {
+      id: 4,
+      img: logo,
+      title: "COCO",
+      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      mod: "Video",
+      lang: "German",
+    },
+    {
+      id: 5,
+      img: logo,
+      title: "VIDEO",
+      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      mod: "Texts",
+      lang: "French",
+    },
+  ];
+
+  const [dataShow, setdataShow] = useState(datas)
+
+  function handleFilter(type,title){
+    let tmp=[]
+    if(title==="Modality"){
+      tmp=datas.filter(item=>item.mod===type)
+    }else if(title==="Task"){
+      tmp=datas.filter(item=>item.mod===type)
+    }else{
+      tmp=datas.filter(item=>item.lang===type)
+    }
+    setdataShow(tmp)
+    console.log(type);
+
+    console.log(tmp);
+
+  }
   return (
     <div className={dm.layout}>
       <div className={dm.filters}>
@@ -40,19 +105,24 @@ function DataMarket() {
             <option>Newest</option>
           </select>
         </div>
-        <Filter title="Modality" types={moTypes} />
-        <Filter title="Task" types={taskTypes} />
-        <Filter title="Language" types={langTypes} />
+        <Filter title="Modality" types={moTypes} handleFilter={handleFilter}/>
+        <Filter title="Task" types={taskTypes} handleFilter={handleFilter} />
+        <Filter title="Language" types={langTypes} handleFilter={handleFilter} />
       </div>
-      <div className={dm.results}></div>
+      <div className={dm.results}>
+        <h3>{dataShow.length} dataset results</h3>
+        {dataShow.map((item) => {
+          return <Row key={item.id} data={item} />;
+        })}
+      </div>
     </div>
   );
 }
 function Filter(props) {
-  const { types, title } = props;
+  const { types, title, handleFilter } = props;
 
-  function handleFilter(type) {
-    // console.log(type);
+  function changeFilter(type) {
+    handleFilter(type,title)
   }
   return (
     <div className={dm.filter}>
@@ -63,7 +133,7 @@ function Filter(props) {
             <div
               key={item.name}
               className={dm.item}
-              onClick={handleFilter(item.name)}
+              onClick={()=>changeFilter(item.name)}
             >
               <div className={dm.name}>{item.name}</div>
               <div className={dm.number}>{item.number}</div>
@@ -74,4 +144,20 @@ function Filter(props) {
     </div>
   );
 }
+
+function Row(props) {
+  const { data } = props;
+  return (
+    <div className={dm.row}>
+      <img src={logo} style={{ width: "135px" }}></img>
+      <div className={dm.row_info}>
+        <Link to={"/dataset/:"+data.id}>
+          <h3 className={dm.row_title}>{data.title}</h3>
+        </Link>
+        <div>{data.desc}</div>
+      </div>
+    </div>
+  );
+}
+
 export default DataMarket;

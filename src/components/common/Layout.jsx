@@ -20,6 +20,7 @@ import Registration from '../Registration';
 import FL from '../FL';
 import DataMarket from '../DataMarket'
 import ModelMarket from '../ModelMarket';
+import Dataset from '../DatasetPage';
 import logo from '../../assets/uis.png'
 
 const Layout = () => {
@@ -113,6 +114,8 @@ const Layout = () => {
                 <Route path="/modelMarket" index element={ isLoggedIn ? <ModelMarket/> : <Navigate to="/login" />} />
                 <Route path="/dashboard" element={ isLoggedIn ? <Dashboard /> : <Navigate to="/fl" />} />
                 <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/fl" />} />
+                <Route path="/dataset/:id" element={ isLoggedIn ? <Dataset /> : <Navigate to="/dataset:id" />} />
+
 
                 {/* <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} /> */}
                 {/* <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} /> */}

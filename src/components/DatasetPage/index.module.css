@@ -1,0 +1,44 @@
+.back{
+    border: none;
+    background: none;
+    /* font-size: 1.2em; */
+    display: flex;
+    align-items: center;
+}
+
+.main{
+    padding: 2em 5em;
+}
+
+.info{
+    display: flex;
+    align-items: center;
+}
+
+.desc{
+    padding: 2em;
+}
+
+.img{
+    width: 20%;
+    height: fit-content;
+}
+
+.tag{
+    padding: 0.2em 1em;
+    border: 1px solid #bfbaba;
+    border-radius: 0.5em;
+    margin-right: 1em;
+    color:#547efb;
+}
+
+.tags{
+    display: flex;
+    margin-bottom: 1em;
+}
+
+.stitle{
+    border-bottom: 1px solid #c8c7c7;
+    width: 70%;
+    margin-top: 3em;
+}
