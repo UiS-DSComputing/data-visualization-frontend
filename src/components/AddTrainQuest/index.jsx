@@ -54,7 +54,7 @@ function AddTrainRequest(props) {
       await axios({ method: 'post',
       url:`${BACKEND_API_PREFIX}/start/training/server`, 
       timeout:300000,
-      data:newTask
+      data:JSON.stringify(newTask)
     })
 		.then((res) => {
       newTask.id=res.data.id
