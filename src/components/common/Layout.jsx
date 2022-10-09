@@ -21,6 +21,7 @@ import FL from '../FL';
 import DataMarket from '../DataMarket'
 import ModelMarket from '../ModelMarket';
 import Dataset from '../DatasetPage';
+import Request from '../RequestPage'
 import logo from '../../assets/uis.png'
 
 const Layout = () => {
@@ -115,6 +116,8 @@ const Layout = () => {
                 <Route path="/dashboard" element={ isLoggedIn ? <Dashboard /> : <Navigate to="/fl" />} />
                 <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/fl" />} />
                 <Route path="/dataset/:id" element={ isLoggedIn ? <Dataset /> : <Navigate to="/dataset:id" />} />
+                <Route path="/request/:id" element={ isLoggedIn ? <Request /> : <Navigate to="/request:id" />} />
+
 
 
                 {/* <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} /> */}

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { map } from "jquery";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import { IoAddCircleOutline, IoDownloadOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import { authActions } from "../../store/";
 import fl from "./index.module.css";
 import PopBox from "../PopBox";
 import { GrClose } from "react-icons/gr";
+import { Link } from "react-router-dom";
 
 function FL() {
   // const user_id = useSelector((state) => state.user_id);
@@ -170,7 +170,7 @@ function Table() {
             }
           });
           setAllTasks(tmp);
-          console.log(allTasks)
+          console.log(allTasks);
           return task;
         });
     } catch (err) {
@@ -285,14 +285,18 @@ function Table() {
             <th>Metrics</th>
             <th>Last Update</th>
             <th>Download</th>
+            <th>Commands</th>
+            <th>Location</th>
           </tr>
         </thead>
         <tbody>
           {allTasks.map((item, i) => {
             return (
               <tr key={i}>
-                <td>{i}</td>
-                <td onClick={() => handleCheck(item)}>{item.showId}</td>
+                <td>{i+1}</td>
+                <td>
+                  <Link to={"/request/:" + item.id}> {item.showId}</Link>
+                </td>
                 <td>{item.task}</td>
                 <td>{item.rounds}</td>
                 <td
@@ -307,9 +311,11 @@ function Table() {
                 <td>{item.model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
-                <td onClick={() => handleDownload(item.link)}>
+                <td onClick={() => handleDownload(item.link)} >
                   <IoDownloadOutline />
                 </td>
+                <td onClick={()=>handleCheck(item)}>check commands</td>
+                <td>location</td>
               </tr>
             );
           })}
@@ -336,8 +342,8 @@ function PopCmd(props) {
   }
   const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
 
-  const win = `./run.ps1 -ip 127.0.0.1 -port ${cmdTask.port}`;
-  const unix = `bash run.sh -h 127.0.0.1 -p ${cmdTask.port}`;
+  const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
+  const unix = `bash run.sh -h ${cmdTask.ip} -p ${cmdTask.port}`;
   return (
     <div className={fl.popup_box}>
       <div className={fl.box}>

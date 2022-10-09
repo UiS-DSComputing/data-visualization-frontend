@@ -65,7 +65,6 @@ function AddTrainRequest(props) {
       console.log("update send")
       addRequest(1,newTask)
 		})
-    
   };
 
   function onConfirm() {
@@ -83,22 +82,6 @@ function AddTrainRequest(props) {
       agr:agr,
       lastUpdate:date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     };
-    
-    // // post 
-		// axios({ method: 'post',
-    //   url:`${BACKEND_API_PREFIX}/start/training/server`, 
-    //   timeout:3000000,
-    //   data:newTask
-    // })
-		// .then((res) => {
-    //   newTask.id=res.data.id
-    //   newTask.link=res.data.link
-    //   newTask.ip=res.data.ip
-    //   newTask.port=res.data.port
-    //   console.log("update")
-    //   console.log(newTask)
-    //   updateTask(newTask)
-		// })
     addRequest(0,newTask)
     addNewRequest(newTask)
     handleClose(false)
