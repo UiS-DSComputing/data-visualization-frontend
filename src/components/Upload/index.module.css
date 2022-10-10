@@ -1,0 +1,91 @@
+.radio_toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+  }
+
+  .radio_toolbar label {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    /* font-family: sans-serif, Arial; */
+    /* font-size: 16px; */
+    border-radius: 4px;
+    margin-right: 1em;
+}
+
+
+
+
+.radio_toolbar{
+    display: flex;
+    align-items: center;
+}
+
+.checked {
+    border: 1px solid #3366ff;
+    color: white;
+    background-color: #3366ff;
+}
+.normal{
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+}
+
+.select{
+        /* padding: 10px; */
+    /* width: 200px; */
+    border: 1px solid rgb(59, 114, 185);
+    border-radius: 0.5em;
+    /* font-weight: bold; */
+    /* font-size: 1rem; */
+    padding: 0.1em 0.5em;
+}
+
+.layout{
+    font-size: 16px;
+}
+
+.enter{
+    border-radius: 0.5em;
+    border: 1px solid;
+    padding: 0.2em;
+    width: fit-content;
+}
+
+.layout div {
+    margin: 1em 0;
+}
+
+.btn{
+    border: 1px solid;
+    border-radius: 0.5em;
+    padding: 0.2em 1em;
+    background-color: #3366ff;
+    color: white;
+}
+
+.btn:after {
+    content:"";
+    display:block;
+    clear:both;
+   }
+
+.cmd{
+    background-color: black;
+    color: white;
+    padding: 1em 2em;
+    border-radius: 0.5em;
+}
+
+.title{
+    font-size: 1.5em;
+    /* text-decoration: underline; */
+    border-bottom: 1px solid;
+}
+
+.copy{
+    text-align: right;
+    color: #3366ff;
+    font-size: 0.8em;
+}

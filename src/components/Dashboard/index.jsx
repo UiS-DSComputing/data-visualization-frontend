@@ -1,26 +1,32 @@
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import db from "./index.module.css";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 function Dashboard() {
   const [search, setSearch] = useState("");
   const [result,setResult]=useState([])
+  const token = useSelector((state) => state.accessToken);
+
   const BACKEND_API_PREFIX =
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
   const sendSearch = async (keyword) => {
     await axios
-      .get(`${BACKEND_API_PREFIX}/training/status/${keyword}`)
+      .get(`${BACKEND_API_PREFIX}/training/status/${keyword}`,config)
       .then((res) => {
         setResult(res.data)
       });
   };
-
+  
   function handleInput(e) {
     setSearch(e.target.value);
   }
   function handleSearch() {
     console.log(search);
-    sendSearch(search)
+    // sendSearch(search)
   }
   return (
     <div>

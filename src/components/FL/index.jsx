@@ -8,18 +8,9 @@ import fl from "./index.module.css";
 import PopBox from "../PopBox";
 import { GrClose } from "react-icons/gr";
 import { Link } from "react-router-dom";
+import tf from "../../assets/tf.png";
 
 function FL() {
-  // const user_id = useSelector((state) => state.user_id);
-  // const navigate = useNavigate();
-  const token = useSelector((state) => state.accessToken);
-  // const [allFiles, setAllFiles] = useState([]);
-  // const dispatch1 = useDispatch();
-
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   return (
     <div>
       <Table />
@@ -29,30 +20,24 @@ function FL() {
 function Table() {
   const dispatch1 = useDispatch();
   const navigate = useNavigate();
+  const token = useSelector((state) => state.accessToken);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const BACKEND_API_PREFIX =
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([
-    // {
-    //   agr: "FedSGD",
-    //   client: "org1",
-    //   id: "4399105c2fa697152008408bd716326b7d668cf5227341c25df2615bbed0d198",
-    //   ip: "161.97.133.43",
-    //   lastUpdate: "12:32:24",
-    //   link: "/download/1126141801065182034.zip",
-    //   metrics: "MINIST",
-    //   model: "CNN",
-    //   port: 54399,
-    //   rounds: "1",
-    //   showId: "wyOndcLKzTXzkgJnUhL3F",
-    //   status: 0,
-    //   task: "task1",
-    //   updateTask: "12:28:34",
-    // },
-  ]);
+  const [allTasks, setAllTasks] = useState([]);
   // tasks for filter
   // const [showTasks, setShowTasks] = useState([]);
+  const colors = {
+    running: { color: "#278327", show: "Running" },
+    stooped: { color: "#a34242", show: "Stopped" },
+    finished: { color: "#f1ca58", show: "Finished" },
+    waiting: { color: "#888", show: "Waiting" },
+  };
   const status = [
     {
       id: 0,
@@ -61,22 +46,26 @@ function Table() {
     },
     {
       id: 1,
-      value: "Running",
+      show: "Running",
+      value: "running",
       color: "#278327",
     },
     {
       id: 2,
-      value: "Stopped",
+      show: "Stopped",
+      value: "stopped",
       color: "#a34242",
     },
     {
       id: 3,
-      value: "Finished",
+      value: "finished",
+      show: "Finished",
       color: "#f1ca58",
     },
     {
       id: 4,
-      value: "Waiting",
+      show: "Waiting",
+      value: "waiting",
       color: "#888",
     },
   ];
@@ -100,8 +89,6 @@ function Table() {
       let tmptasksn = allTasks;
       tmptasksn.push(task);
       setAllTasks(tmptasksn);
-      console.log("add");
-      console.log(allTasks);
     } else {
       // update exist request
       let date = new Date();
@@ -118,11 +105,8 @@ function Table() {
           return item;
         }
       });
-      console.log("update");
       setAllTasks(tmptasks);
-      console.log(allTasks);
     }
-    // setShowTasks(tmptasks);
   }
 
   function updateTask(task) {
@@ -138,40 +122,28 @@ function Table() {
         return item;
       }
     });
-    console.log("update");
     setAllTasks(tmptasks);
-    console.log(allTasks);
   }
 
-  const getStatus = async (task) => {
+  const updateStatus = async (task) => {
     let date = new Date();
     try {
       await axios
-        .get(`${BACKEND_API_PREFIX}/training/status/${task.id}`)
+        .get(`${BACKEND_API_PREFIX}/training/status/${task.id}`, config)
         .then((res) => {
-          // string into number
-          // running->0, stopped->1, finished->2
-          console.log("send update status request");
-          let status = res.data.status;
-          if (status === "running") {
-            task.status = 0;
-          } else if (status === "stopped") {
-            task.status = 1;
-          } else {
-            task.status = 2;
-          }
+          // update tasks in axios
+          task.status = res.data.status;
           task.lastUpdate =
             date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-          let tmp = allTasks.map((item) => {
-            if (item.id === task.id) {
-              return task;
-            } else {
-              return item;
+
+          let tmptasks=allTasks.map((item)=>{
+            if(item.id===task.id){
+              return task
+            }else{
+              return item
             }
-          });
-          setAllTasks(tmp);
-          console.log(allTasks);
-          return task;
+          })
+          setAllTasks(tmptasks)
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -182,17 +154,15 @@ function Table() {
   };
 
   useEffect(() => {
-    console.log(allTasks.length);
     const interval = setInterval(() => {
       if (allTasks.length > 0) {
-        console.log("update status");
         const tmp = allTasks.map((task) => {
           if (task.id !== undefined) {
-            console.log("update status single", task.id);
-            let taskk = getStatus(task);
-          } else {
+            updateStatus(task);
           }
+          return task
         });
+        // setAllTasks(tmp);
       }
       // setShowTasks(tmp);
     }, 30000);
@@ -221,6 +191,7 @@ function Table() {
         type: "get",
         url: `${BACKEND_API_PREFIX}${link}`,
         responseType: "blob",
+        headers: { Authorization: `Bearer ${token}` },
       }).then((res) => {
         const href = URL.createObjectURL(res.data);
         const link = document.createElement("a");
@@ -286,14 +257,15 @@ function Table() {
             <th>Last Update</th>
             <th>Download</th>
             <th>Commands</th>
-            <th>Location</th>
+            <th>Model Path</th>
+            <th>Tensor Board</th>
           </tr>
         </thead>
         <tbody>
           {allTasks.map((item, i) => {
             return (
               <tr key={i}>
-                <td>{i+1}</td>
+                <td>{i + 1}</td>
                 <td>
                   <Link to={"/request/:" + item.id}> {item.showId}</Link>
                 </td>
@@ -301,21 +273,24 @@ function Table() {
                 <td>{item.rounds}</td>
                 <td
                   style={{
-                    backgroundColor: status[parseInt(item.status) + 1].color,
+                    backgroundColor: colors[item.status].color,
                     color: "white",
                   }}
                 >
-                  {status[parseInt(item.status) + 1].value}
+                  {colors[item.status].show}
                 </td>
                 <td>{item.client}</td>
                 <td>{item.model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
-                <td onClick={() => handleDownload(item.link)} >
+                <td onClick={() => handleDownload(item.link)}>
                   <IoDownloadOutline />
                 </td>
-                <td onClick={()=>handleCheck(item)}>check commands</td>
+                <td onClick={() => handleCheck(item)}>check commands</td>
                 <td>location</td>
+                <td>
+                  <img src={tf} style={{ width: "20px" }}></img>
+                </td>
               </tr>
             );
           })}

@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState, useReducer } from "react";
 import sp from "./index.module.css";
 import { MdContentCopy } from "react-icons/md";
 import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../store/";
 
 
 const BACKEND_API_PREFIX =
@@ -11,6 +14,13 @@ const BACKEND_API_PREFIX =
 function AddTrainRequest(props) {
 
   const {addRequest,updateTask,handleClose}=props
+  const dispatch1 = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.accessToken);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [taskName, setTaskName] = useState("task1");
   const [model, setModel] = useState("");
@@ -50,11 +60,13 @@ function AddTrainRequest(props) {
   });
 
   const addNewRequest = async (newTask) => {
+    try{
     let date = new Date();
       await axios({ method: 'post',
       url:`${BACKEND_API_PREFIX}/start/training/server`, 
       timeout:300000,
-      data:JSON.stringify(newTask)
+      data:JSON.stringify(newTask),
+      headers: { Authorization: `Bearer ${token}` },
     })
 		.then((res) => {
       newTask.id=res.data.id
@@ -65,6 +77,13 @@ function AddTrainRequest(props) {
       console.log("update send")
       addRequest(1,newTask)
 		})
+    }catch(err){
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+
   };
 
   function onConfirm() {
@@ -77,7 +96,7 @@ function AddTrainRequest(props) {
       rounds: np,
       client: client,
       model:model,
-      status:3,
+      status:"waiting",
       metrics: dataset,
       agr:agr,
       lastUpdate:date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()

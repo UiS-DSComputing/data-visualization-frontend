@@ -1,12 +1,25 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import dm from "./index.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../store/";
 import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import logo from "../../assets/uis.png";
+import axios from "axios";
 
 function DataMarket() {
-  
+  const dispatch1 = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.accessToken);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const BACKEND_API_PREFIX =
+  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+
   const moTypes = [
     { name: "Images", number: 1289 },
     { name: "Video", number: 678 },
@@ -73,7 +86,7 @@ function DataMarket() {
       lang: "French",
     },
   ];
-
+  const [lists, setLists] = useState([])
   const [dataShow, setdataShow] = useState(datas)
 
   function handleFilter(type,title){
@@ -87,10 +100,29 @@ function DataMarket() {
     }
     setdataShow(tmp)
     console.log(type);
-
     console.log(tmp);
+  }
+  const getList = async () => {
+    try {
+      await axios
+        .get(`${BACKEND_API_PREFIX}/file-collection`,config)
+        .then((res) => {
+          console.log(res.data)
+          setLists(res.data)
+        });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
 
   }
+
+  useEffect(() => {
+    getList()
+  }, [])
+  
   return (
     <div className={dm.layout}>
       <div className={dm.filters}>
@@ -111,7 +143,7 @@ function DataMarket() {
       </div>
       <div className={dm.results}>
         <h3>{dataShow.length} dataset results</h3>
-        {dataShow.map((item) => {
+        {lists.map((item)=>{
           return <Row key={item.id} data={item} />;
         })}
       </div>
@@ -152,9 +184,9 @@ function Row(props) {
       <img src={logo} style={{ width: "135px" }}></img>
       <div className={dm.row_info}>
         <Link to={"/dataset/:"+data.id}>
-          <h3 className={dm.row_title}>{data.title}</h3>
+          <h3 className={dm.row_title}>{data.filename}</h3>
         </Link>
-        <div>{data.desc}</div>
+        <div>desc</div>
       </div>
     </div>
   );

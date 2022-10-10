@@ -67,7 +67,7 @@ const FileUpload = forwardRef (({
     <>
       <FileUploadContainer>
         <InputLabel>{label}</InputLabel>
-        <DragDropText>Drag and drop your files anywhere or</DragDropText>
+        <DragDropText>Drag and drop your files here or</DragDropText>
         <UploadFileBtn type="button" onClick={handleUploadBtnClick}>
           <i className="fas fa-file-upload" />
           <span> Upload {otherProps.multiple ? "files" : "a file"}</span>

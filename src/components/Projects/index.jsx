@@ -6,61 +6,50 @@ import {BiUser} from "react-icons/bi"
 import LogST from "../LogST";
 import s from "./index.module.css";
 import PopBox from "../PopBox";
+import { Link } from "react-router-dom";
 
 function Station() {
-  const [isLogedFL, setIsLogedFL] = useState(false);
-  const [user, setUser] = useState({ username: "", password: "" });
-  function changeLogStatus(status, u) {
-    setIsLogedFL(status);
-    setUser(u);
-  }
-  function handleLogout(e){
-    setIsLogedFL(e)
-  }
   return (
     <div>
-      {!isLogedFL && <LogST changeLogStatus={changeLogStatus} />}
-      {isLogedFL && (
         <div className={s.layout}>
-          <UserInfo user={user} logout={handleLogout} />
-          <Table user={user} />
+          {/* <UserInfo user={user} logout={handleLogout} /> */}
+          <Table />
         </div>
-      )}
+      
     </div>
   );
 }
-function UserInfo(prop) {
-  const { user,logout } = prop;
-  function handleLogout(){
-    logout(false)
-  }
-  return (
-    <div className={s.user}>
-      <div className={s.label}>STATION REGISTRY</div>
-      <div className={s.profile}><BiUser size="4em" style={{top:"1em",position:"relative",color:"#337aff"}}/></div>
-      <button className={s.lout} onClick={handleLogout}>Log Out</button>
-      <table className={s.info}>
-        <tbody>
-          <tr>
-            <td>
-              <MdTrain />
-            </td>
-            <td>Stations</td>
-          </tr>
-          <tr>
-            <td>
-              <FaRegBuilding />
-            </td>
-            <td>Organizations</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-}
+// function UserInfo(prop) {
+//   const { user,logout } = prop;
+//   function handleLogout(){
+//     logout(false)
+//   }
+//   return (
+//     <div className={s.user}>
+//       <div className={s.label}>STATION REGISTRY</div>
+//       <div className={s.profile}><BiUser size="4em" style={{top:"1em",position:"relative",color:"#337aff"}}/></div>
+//       <button className={s.lout} onClick={handleLogout}>Log Out</button>
+//       <table className={s.info}>
+//         <tbody>
+//           <tr>
+//             <td>
+//               <MdTrain />
+//             </td>
+//             <td>Stations</td>
+//           </tr>
+//           <tr>
+//             <td>
+//               <FaRegBuilding />
+//             </td>
+//             <td>Organizations</td>
+//           </tr>
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
 
 function Table(props) {
-    const {user}=props
   const titles = [
     "ID",
     "Dataset",
@@ -95,7 +84,8 @@ function Table(props) {
   }
   return (
     <div className={s.table}>
-      <button className={s.add}  onClick={() => PopUp(true)}><BiPlus/>Add New</button>
+    
+      <button className={s.add}  onClick={() => PopUp(true)}><BiPlus/><Link to={"/upload"}>Add New</Link></button>
       <h2>
         <MdTrain />
         Stations
@@ -127,7 +117,7 @@ function Table(props) {
           })}
         </tbody>
       </table>
-      {pop && <PopBox PopUp={PopUp} type={"station"} addStation={addStation} user={user}/>}
+      {pop && <PopBox PopUp={PopUp} type={"station"} addStation={addStation}/>}
     </div>
   );
 }
