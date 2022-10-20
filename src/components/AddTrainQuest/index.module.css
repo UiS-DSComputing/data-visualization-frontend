@@ -85,8 +85,17 @@
     border-bottom: 1px solid;
 }
 
+.grid label{
+    margin-right: 1em;
+}
+
 .copy{
     text-align: right;
     color: #3366ff;
     font-size: 0.8em;
+}
+
+.clientsrow{
+    display: flex;
+    align-items: flex-start;
 }

@@ -7,13 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/";
 
-
 const BACKEND_API_PREFIX =
   process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 
 function AddTrainRequest(props) {
-
-  const {addRequest,updateTask,handleClose}=props
+  const { addRequest, updateTask, handleClose } = props;
   const dispatch1 = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.accessToken);
@@ -22,16 +20,15 @@ function AddTrainRequest(props) {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const [taskName, setTaskName] = useState("task1");
+  const [taskName, setTaskName] = useState("task");
   const [model, setModel] = useState("");
   const [dataset, setDataset] = useState("");
   const [agr, setAgr] = useState("");
   const models = ["CNN", "ResNet18", "ResNet", "50", "VGG19"];
   const dbs = ["MINIST", "CIFAR10", "CIFAR100"];
   const agrs = ["FedSGD", "FedAVG"];
-  const [client, setClient] = useState("org1");
+  const [clients, setClients] = useState([]);
   const [np, setNp] = useState(0);
-  const clients = ["org1", "org2", "org3"];
   const [cmd, setCmd] = useState("");
 
   const [state, dispatch] = useReducer((state, action) => {
@@ -52,7 +49,10 @@ function AddTrainRequest(props) {
         setNp(action.value);
         return { ...state };
       case "CLIENT":
-        setClient(action.value);
+        let tmp = clients;
+        tmp.push(action.value);
+        setClients(tmp);
+        console.log(clients);
         return { ...state };
       default:
         return { ...state };
@@ -60,50 +60,51 @@ function AddTrainRequest(props) {
   });
 
   const addNewRequest = async (newTask) => {
-    try{
-    let date = new Date();
-      await axios({ method: 'post',
-      url:`${BACKEND_API_PREFIX}/start/training/server`, 
-      timeout:300000,
-      data:JSON.stringify(newTask),
-      headers: { Authorization: `Bearer ${token}` },
-    })
-		.then((res) => {
-      newTask.id=res.data.id
-      newTask.link=res.data.link
-      newTask.ip=res.data.ip
-      newTask.port=res.data.port
-      newTask.updateTask=date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-      console.log("update send")
-      addRequest(1,newTask)
-		})
-    }catch(err){
+    try {
+      let date = new Date();
+      await axios({
+        method: "post",
+        url: `${BACKEND_API_PREFIX}/start/training/server`,
+        timeout: 300000,
+        data: JSON.stringify(newTask),
+        headers: { Authorization: `Bearer ${token}` },
+      }).then((res) => {
+        newTask.id = res.data.id;
+        newTask.link = res.data.link;
+        newTask.ip = res.data.ip;
+        newTask.port = res.data.port;
+        newTask.updateTask =
+          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        console.log("update send");
+        addRequest(1, newTask);
+      });
+    } catch (err) {
       if (err.response.status === 401) {
         dispatch1(authActions.logout());
         navigate("/login");
       }
     }
-
   };
 
   function onConfirm() {
     let date = new Date();
-    let showid=nanoid()
+    let showid = nanoid();
     // initial status : waiting
     let newTask = {
-      showId:showid,
+      showId: showid,
       task: taskName,
       rounds: np,
-      client: client,
-      model:model,
-      status:"waiting",
+      clients: clients,
+      model: model,
+      status: "waiting",
       metrics: dataset,
-      agr:agr,
-      lastUpdate:date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+      agr: agr,
+      lastUpdate:
+        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
     };
-    addRequest(0,newTask)
-    addNewRequest(newTask)
-    handleClose(false)
+    addRequest(0, newTask);
+    addNewRequest(newTask);
+    handleClose(false);
   }
 
   const [copied, setCopied] = useState(false);
@@ -112,7 +113,6 @@ function AddTrainRequest(props) {
     navigator.clipboard.writeText(cmd);
     setCopied(true);
   }
-
 
   return (
     <div className={sp.layout}>
@@ -189,38 +189,43 @@ function AddTrainRequest(props) {
           );
         })}
       </div>
-      <div className={sp.radio_toolbar}>
-        <div>Client: &nbsp;</div>
-        <select
-          name="client"
-          id="client"
-          onChange={(e) => dispatch({ type: "CLIENT", value: e.target.value })}
-          className={sp.select}
-        >
-          {clients.map((item) => {
-            return (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            );
-          })}
-        </select>
+      <div className={sp.clientsrow}>
+        <div>Client(s): &nbsp;</div>
+        <div className={sp.grid}>
+          <label>
+            <input
+              onClick={() => dispatch({ type: "CLIENT", value: "client1" })}
+              type="checkbox"
+              id="client1"
+              name="client1"
+            />
+             &nbsp;Client(1), Norway
+          </label>
+          <label>
+            <input
+              onClick={() => dispatch({ type: "CLIENT", value: "client2" })}
+              type="checkbox"
+              id="client2"
+              name="client2"
+            />
+             &nbsp;Client(2), Norway
+          </label>
+          <label>
+            <input
+              onClick={() => dispatch({ type: "CLIENT", value: "client2" })}
+              type="checkbox"
+              id="client3"
+              name="client3"
+            />
+             &nbsp;Client(3), Germany
+          </label>
+        </div>
       </div>
       <div style={{ textAlign: "right" }}>
         <button className={sp.btn} onClick={onConfirm}>
           Confirm
         </button>
       </div>
-      {/* {cmd != "" && (
-        <div className={sp.cmd}>
-          {cmd}{" "}
-          <MdContentCopy
-            style={{ float: "right" }}
-            onClick={(e) => handleCopy(e)}
-          />
-        </div>
-      )}
-      {copied && <div className={sp.copy}>Copied!</div>} */}
     </div>
   );
 }

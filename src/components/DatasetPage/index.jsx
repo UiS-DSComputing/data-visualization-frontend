@@ -39,6 +39,9 @@ function DatasetPage(props) {
           <div className={dp.desc}>{data.desc}</div>
           <img src={logo}  className={dp.img}></img>
         </div>
+        <div>
+          <button className={dp.apply}>Apply</button>
+        </div>
         <div className={dp.other}>
             <h3 className={dp.stitle}>Dataset Users</h3>
             <div>UiS</div>

@@ -7,6 +7,7 @@ import { authActions } from "../../store/";
 import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import logo from "../../assets/uis.png";
+
 import axios from "axios";
 
 function DataMarket() {
@@ -48,7 +49,7 @@ function DataMarket() {
     {
       id: 1,
       img: logo,
-      title: "CIFAR10",
+      title: "CIFAR10  (Norway 1)",
       desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
       mod: "Images",
       lang: "Chinese",
@@ -56,7 +57,7 @@ function DataMarket() {
     {
       id: 2,
       img: logo,
-      title: "CIFAR10",
+      title: "CIFAR10 (Norway 2)",
       desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
       mod: "Texts",
       lang: "English",
@@ -64,16 +65,17 @@ function DataMarket() {
     {
       id: 3,
       img: logo,
-      title: "IMAGEnet",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      title: "ImageNet",
+      desc: "The ImageNet dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
       mod: "Images",
       lang: "English",
     },
+
     {
       id: 4,
       img: logo,
       title: "COCO",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
+      desc: "The COCO dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
       mod: "Video",
       lang: "German",
     },
@@ -105,7 +107,7 @@ function DataMarket() {
   const getList = async () => {
     try {
       await axios
-        .get(`${BACKEND_API_PREFIX}/file-collection`,config)
+        .get(`${BACKEND_API_PREFIX}/datasets`,config)
         .then((res) => {
           console.log(res.data)
           setLists(res.data)
@@ -120,7 +122,7 @@ function DataMarket() {
   }
 
   useEffect(() => {
-    getList()
+    // getList()
   }, [])
   
   return (
@@ -143,7 +145,7 @@ function DataMarket() {
       </div>
       <div className={dm.results}>
         <h3>{dataShow.length} dataset results</h3>
-        {lists.map((item)=>{
+        {datas.map((item)=>{
           return <Row key={item.id} data={item} />;
         })}
       </div>
@@ -184,9 +186,9 @@ function Row(props) {
       <img src={logo} style={{ width: "135px" }}></img>
       <div className={dm.row_info}>
         <Link to={"/dataset/:"+data.id}>
-          <h3 className={dm.row_title}>{data.filename}</h3>
+          <h3 className={dm.row_title}>{data.title}</h3>
         </Link>
-        <div>desc</div>
+        <div>{data.desc}</div>
       </div>
     </div>
   );

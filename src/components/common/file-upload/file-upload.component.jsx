@@ -1,9 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import {
-  DragDropText, FileMetaData, FilePreviewContainer, FileUploadContainer,
-  FormField, ImagePreview, InputLabel, PreviewContainer,
-  PreviewList, RemoveFileIcon, UploadFileBtn
-} from "./file-upload.styles";
+import fu from "./index.module.css"
 
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 50000000;
@@ -65,14 +61,12 @@ const FileUpload = forwardRef (({
 
   return (
     <>
-      <FileUploadContainer>
-        <InputLabel>{label}</InputLabel>
-        <DragDropText>Drag and drop your files here or</DragDropText>
-        <UploadFileBtn type="button" onClick={handleUploadBtnClick}>
-          <i className="fas fa-file-upload" />
-          <span> Upload {otherProps.multiple ? "files" : "a file"}</span>
-        </UploadFileBtn>
-        <FormField
+      <div className={fu.container}>
+        <label>{label}</label>
+        <span>Drag and drop your files here or</span>
+        <button className={fu.upbtn} onClick={handleUploadBtnClick}>Upload {otherProps.multiple ? "files" : "a file"}</button>
+        <input
+        className={fu.form}
           type="file"
           ref={fileInputField}
           onChange={handleNewFileUpload}
@@ -80,37 +74,36 @@ const FileUpload = forwardRef (({
           value=""
           {...otherProps}
         />
-      </FileUploadContainer>
-      <FilePreviewContainer>
-        <PreviewList>
+      </div>
+      <div className={fu.dataCon}>
+        <div className={fu.list}>
           {Object.keys(files).map((fileName, index) => {
             let file = files[fileName];
             let isImageFile = file.type.split("/")[0] === "image";
             return (
-              <PreviewContainer key={fileName}>
-                <div>
+              <div  key={fileName}>
+                <div className={fu.itemCon}>
                   {isImageFile && (
-                    <ImagePreview
+                    <img
+                      className={fu.img}
                       src={URL.createObjectURL(file)}
                       alt={`file preview ${index}`}
                     />
                   )}
-                  <FileMetaData isImageFile={isImageFile}>
+                  <div className={fu.item} isImageFile={isImageFile}>
                     <span>{file.name}</span>
-                    <aside>
-                      <span>{convertBytesToKB(file.size)} kb</span>
-                      <RemoveFileIcon
+                    <span>{convertBytesToKB(file.size)} kb</span>
+                      {/* <RemoveFileIcon
                         className="fas fa-trash-alt"
                         onClick={() => removeFile(fileName)}
-                      />
-                    </aside>
-                  </FileMetaData>
+                      /> */}
+                  </div>
                 </div>
-              </PreviewContainer>
+              </div>
             );
           })}
-        </PreviewList>
-      </FilePreviewContainer>
+        </div>
+      </div>
     </>
   )
 })

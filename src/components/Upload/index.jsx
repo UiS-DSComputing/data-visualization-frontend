@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FileUpload from "../common/file-upload/file-upload.component";
-
 import sp from "./index.module.css";
 
 const BACKEND_API_PREFIX =
@@ -10,7 +9,10 @@ const BACKEND_API_PREFIX =
 function Upload() {
   const token = useSelector((state) => state.accessToken);
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 
+      "Content-Type": 'multipart/form-data',
+      Authorization: `Bearer ${token}` 
+    },
   };
   const childRef = useRef(null);
 
@@ -19,7 +21,6 @@ function Upload() {
   const datatypes = ["CV", "NLP", "ASR"];
   const [filetype, setFiletype] = useState("");
   const files = ["image", "audio", "video", "text", "csv"];
-  const [owner, setOwner] = useState("");
   const [aff, setAff] = useState("");
   const [desc, setDesc] = useState("");
 
@@ -34,9 +35,6 @@ function Upload() {
       case "DATASET":
         setDataset(action.value);
         return { ...state };
-      case "OWNER":
-        setOwner(action.value);
-        return { ...state };
       case "AFF":
         setAff(action.value);
         return { ...state };
@@ -48,8 +46,8 @@ function Upload() {
     }
   });
 
-  useEffect(() => {
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
   const [inputVal, setInputVal] = useState("");
 
@@ -64,28 +62,22 @@ function Upload() {
     var formData = new FormData();
 
     formData.append("file", inputVal, inputVal.name);
-
-    console.log("1", formData);
-    const newStation = {
-      name: dataset,
-      datatype: datatype,
-      filetype: filetype,
-      owner: owner,
-      affiliation: aff,
-      description: desc,
-      dataset:formData
-    };
-    await axios
-      .post(`${BACKEND_API_PREFIX}/upload/`, newStation, config)
-      .then(() => {
-        childRef.current.removeFiles();
-      });
+    formData.append("name", dataset);
+    formData.append("datatype", datatype);
+    formData.append("filetype", filetype);
+    formData.append("affiliation", aff);
+    formData.append("description", desc);
+    // await axios
+    //   .post(`${BACKEND_API_PREFIX}/upload/dataset`, formData, config)
+    //   .then(() => {
+    //     childRef.current.removeFiles();
+    //   });
   };
 
   return (
     <>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} enctype="multipart/form-data">
           <div className={sp.layout}>
             <div className={sp.title}>Add New DataSet</div>
             <div>
@@ -97,16 +89,6 @@ function Upload() {
                   dispatch({ type: "DATASET", value: e.target.value })
                 }
                 className={sp.enter}
-              />
-            </div>
-            <div>
-              Owner: &nbsp; &nbsp;
-              <input
-                className={sp.enter}
-                type="text"
-                onKeyUp={(e) =>
-                  dispatch({ type: "OWNER", value: e.target.value })
-                }
               />
             </div>
             <div>

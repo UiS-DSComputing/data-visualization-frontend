@@ -85,7 +85,7 @@ function Table(props) {
   return (
     <div className={s.table}>
     
-      <button className={s.add}  onClick={() => PopUp(true)}><BiPlus/><Link to={"/upload"}>Add New</Link></button>
+      <button className={s.add}  onClick={() => PopUp(true)}><BiPlus/>Add New</button>
       <h2>
         <MdTrain />
         Stations

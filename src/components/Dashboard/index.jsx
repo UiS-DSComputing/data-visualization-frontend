@@ -2,10 +2,14 @@ import React, { useEffect, useRef, useState, useReducer } from "react";
 import db from "./index.module.css";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import FileUpload from "../common/file-upload/file-upload.component";
+import logo from "../../assets/uis.png";
+import a1 from "../../assets/a1.JPG";
+import a2 from "../../assets/a2.PNG";
+
 
 function Dashboard() {
-  const [search, setSearch] = useState("");
-  const [result,setResult]=useState([])
+
   const token = useSelector((state) => state.accessToken);
 
   const BACKEND_API_PREFIX =
@@ -13,37 +17,35 @@ function Dashboard() {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
+
+  const [results, setResults] = useState([a1,a2])
   const sendSearch = async (keyword) => {
     await axios
       .get(`${BACKEND_API_PREFIX}/training/status/${keyword}`,config)
       .then((res) => {
-        setResult(res.data)
+        // setResult(res.data)
       });
   };
-  
-  function handleInput(e) {
-    setSearch(e.target.value);
-  }
-  function handleSearch() {
-    console.log(search);
-    // sendSearch(search)
-  }
+
   return (
     <div>
-      <div className={db.search}>
-        <input
-          placeholder="search a dataset"
-          onKeyUp={(e) => handleInput(e)}
-        ></input>
-        <button onClick={handleSearch}>Search</button>
+      <div className={db.bigSearch}>
+        <div>
+          <FileUpload/>
+        </div>
       </div>
-      <div>
+      <h2 className={db.len}>{results.length} Results</h2>
+      <div className={db.results}>
+        
         {
-          result!==null && result.map((item,i)=>{return <div key={i}>{item}</div>})
+          results.map((item,i)=>{
+            return <div className={db.imgc}><img src={item} key={i}></img></div>
+          })
         }
       </div>
     </div>
   );
 }
+
 
 export default Dashboard;

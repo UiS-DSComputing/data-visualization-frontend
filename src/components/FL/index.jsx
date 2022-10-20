@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/";
 import fl from "./index.module.css";
 import PopBox from "../PopBox";
-import { GrClose } from "react-icons/gr";
+import { GrClose, GrServers } from "react-icons/gr";
+import { AiFillRightSquare } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import tf from "../../assets/tf.png";
 
@@ -22,6 +23,8 @@ function Table() {
   const navigate = useNavigate();
   const token = useSelector((state) => state.accessToken);
 
+  const [locateId, setLocateId] = useState("");
+
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -29,7 +32,22 @@ function Table() {
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState([
+  //   { showId:"lYk-E9HGneaFXjaQr35i6",
+  //   task:"TaskC",
+  //   rounds:"10",
+  //   clients:["client1","client2"],
+  //   model:"ResNet",
+  //   status:"finished",
+  //   metrics:"CIFAR10",
+  //   agr:"FedSGD",
+  //   lastUpdate:"21:2:34",
+  //   id: "03b0158ebdeec239863bdd82f4faff8c3ac367d58277098213608b6f2c38f4d4",
+  //   ip: "161.97.133.43",
+  //   link: "/download/1086104734408141898.zip",
+  //   port: 52463
+  // }
+  ]);
   // tasks for filter
   // const [showTasks, setShowTasks] = useState([]);
   const colors = {
@@ -72,6 +90,8 @@ function Table() {
   const [showCmd, setShowCmd] = useState(false);
   const [cmdTask, setCmdTask] = useState({});
   const [type, setType] = useState("All");
+  const [popType, setPopType] = useState("cmd");
+
   function PopUp(is) {
     setPop(is);
   }
@@ -80,9 +100,15 @@ function Table() {
   }
   function handleCheck(task) {
     setShowCmd(true);
+    setPopType("cmd");
     setCmdTask(task);
   }
 
+  function showMap(is, id) {
+    setPopType("map");
+    setShowCmd(is);
+    setLocateId(id);
+  }
   function addRequest(type, task) {
     if (type === 0) {
       // add new request
@@ -136,14 +162,14 @@ function Table() {
           task.lastUpdate =
             date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
-          let tmptasks=allTasks.map((item)=>{
-            if(item.id===task.id){
-              return task
-            }else{
-              return item
+          let tmptasks = allTasks.map((item) => {
+            if (item.id === task.id) {
+              return task;
+            } else {
+              return item;
             }
-          })
-          setAllTasks(tmptasks)
+          });
+          setAllTasks(tmptasks);
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -157,10 +183,10 @@ function Table() {
     const interval = setInterval(() => {
       if (allTasks.length > 0) {
         const tmp = allTasks.map((task) => {
-          if (task.id !== undefined) {
+          if (task.id !== undefined && task.id!=="03b0158ebdeec239863bdd82f4faff8c3ac367d58277098213608b6f2c38f4d4") {
             updateStatus(task);
           }
-          return task
+          return task;
         });
         // setAllTasks(tmp);
       }
@@ -251,7 +277,6 @@ function Table() {
             <th>Task</th>
             <th>Rounds</th>
             <th>Cur. Status</th>
-            <th>Clients</th>
             <th>Global Model</th>
             <th>Metrics</th>
             <th>Last Update</th>
@@ -266,9 +291,7 @@ function Table() {
             return (
               <tr key={i}>
                 <td>{i + 1}</td>
-                <td>
-                  <Link to={"/request/:" + item.id}> {item.showId}</Link>
-                </td>
+                <td onClick={() => showMap(true, item.id)}>{item.showId}</td>
                 <td>{item.task}</td>
                 <td>{item.rounds}</td>
                 <td
@@ -279,7 +302,6 @@ function Table() {
                 >
                   {colors[item.status].show}
                 </td>
-                <td>{item.client}</td>
                 <td>{item.model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
@@ -287,9 +309,9 @@ function Table() {
                   <IoDownloadOutline />
                 </td>
                 <td onClick={() => handleCheck(item)}>check commands</td>
-                <td>location</td>
+                <td><a href="http://161.97.133.43:8001/" target="_blank">models</a></td>
                 <td>
-                  <img src={tf} style={{ width: "20px" }}></img>
+                  <a href="http://161.97.133.43:8090/"  target="_blank"><img src={tf} style={{ width: "20px" }}></img></a>
                 </td>
               </tr>
             );
@@ -304,21 +326,25 @@ function Table() {
           updateTask={updateTask}
         />
       )}
-      {showCmd && <PopCmd handlePopcmd={handlePopcmd} cmdTask={cmdTask} />}
+      {showCmd && (
+        <PopCmd
+          handlePopcmd={handlePopcmd}
+          cmdTask={cmdTask}
+          type={popType}
+          locateId={locateId}
+        />
+      )}
     </div>
   );
 }
 
 function PopCmd(props) {
-  const { handlePopcmd, cmdTask } = props;
+  const { handlePopcmd, cmdTask, type, locateId } = props;
 
   function handleClose() {
     handlePopcmd(false);
   }
-  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
 
-  const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
-  const unix = `bash run.sh -h ${cmdTask.ip} -p ${cmdTask.port}`;
   return (
     <div className={fl.popup_box}>
       <div className={fl.box}>
@@ -330,62 +356,118 @@ function PopCmd(props) {
             children={<GrClose />}
           ></span>
         </div>
-        <div className={fl.cmdlayout}>
-          <div>For client:</div>
-          <div className={fl.cmd}>{client}</div>
-          <div>For Unix user:</div>
-          <div className={fl.cmd}>
-            <p>
-              example: <span>{unix}</span>
-            </p>
-            <p>parameters:</p>
-            <p>
-              <span>-h</span>server ip address, eg. -h 127.0.0.1
-            </p>
-            <p>
-              <span>-p</span>server port, eg. -p 12345
-            </p>
-            <p>
-              <span>-v</span>data volume, could be volume name or local path,
-              eg. -v /data
-            </p>
-            <p>
-              <span>-i</span>image name, eg. -i image_name
-            </p>
-            <p>
-              <span>-c</span>container name, eg. -c container_name
-            </p>
-            <p>
-              <span>-H</span>help
-            </p>
-          </div>
-          <div>For Windows user (POWERSHELL ONLY):</div>
-          <div className={fl.cmd}>
-            <p>
-              example: <span>{win}</span>
-            </p>
-            <p>parameters:</p>
-            <p>
-              <span>-ip</span>server ip address, eg. -ip 127.0.0.1
-            </p>
-            <p>
-              <span>-port</span>server port, eg. -port 12345
-            </p>
-            <p>
-              <span>-volume</span>data volume, could be volume name or local
-              path, eg. -volume /data
-            </p>
-            <p>
-              <span>-image</span>image name, eg. -image image_name
-            </p>
-            <p>
-              <span>-container</span>container name, eg. -container
-              container_name
-            </p>
-            <p>
-              <span>-help</span>help
-            </p>
-          </div>
+        {type === "cmd" ? (
+          <CMD cmdTask={cmdTask} />
+        ) : (
+          <Map locateId={locateId} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CMD(props) {
+  const { cmdTask } = props;
+  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
+
+  const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
+  const unix = `bash run.sh -h ${cmdTask.ip} -p ${cmdTask.port}`;
+  return (
+    <div className={fl.cmdlayout}>
+      <div>For client:</div>
+      <div className={fl.cmd}>{client}</div>
+      <div>For Unix user:</div>
+      <div className={fl.cmd}>
+        <p>
+          example: <span>{unix}</span>
+        </p>
+        <p>parameters:</p>
+        <p>
+          <span>-h</span>server ip address, eg. -h 127.0.0.1
+        </p>
+        <p>
+          <span>-p</span>server port, eg. -p 12345
+        </p>
+        <p>
+          <span>-v</span>data volume, could be volume name or local path, eg. -v
+          /data
+        </p>
+        <p>
+          <span>-i</span>image name, eg. -i image_name
+        </p>
+        <p>
+          <span>-c</span>container name, eg. -c container_name
+        </p>
+        <p>
+          <span>-H</span>help
+        </p>
+      </div>
+      <div>For Windows user (POWERSHELL ONLY):</div>
+      <div className={fl.cmd}>
+        <p>
+          example: <span>{win}</span>
+        </p>
+        <p>parameters:</p>
+        <p>
+          <span>-ip</span>server ip address, eg. -ip 127.0.0.1
+        </p>
+        <p>
+          <span>-port</span>server port, eg. -port 12345
+        </p>
+        <p>
+          <span>-volume</span>data volume, could be volume name or local path,
+          eg. -volume /data
+        </p>
+        <p>
+          <span>-image</span>image name, eg. -image image_name
+        </p>
+        <p>
+          <span>-container</span>container name, eg. -container container_name
+        </p>
+        <p>
+          <span>-help</span>help
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Map(props) {
+  const { locateId } = props;
+  const token = useSelector((state) => state.accessToken);
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const BACKEND_API_PREFIX =
+    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+
+  const getLocation = async () => {
+    await axios
+      .get(`${BACKEND_API_PREFIX}/training/connections/${locateId}`, config)
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+
+  useEffect(() => {
+    // getLocation();
+  }, []);
+
+  return (
+    <div className={fl.cmdlayout}>
+      <h3>Locations:</h3>
+      <div>
+        <GrServers />
+        &nbsp;&nbsp;Server: Germany
+      </div>
+      <div className={fl.clients}>
+        <div>
+          <AiFillRightSquare />
+          &nbsp;&nbsp;Client (1), Norway
+        </div>
+        <div>
+          <AiFillRightSquare />
+          &nbsp;&nbsp;Client (2), Norway
         </div>
       </div>
     </div>

@@ -21,3 +21,30 @@
     background-color: #717171;
     color: white;
   }
+
+  .addbtn{
+    position: relative;
+    float: right;
+    background-color: #337aff;
+    width: fit-content;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: none;
+  }
+
+  .frow{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+    padding-bottom: 1em;
+    align-items: flex-end;
+  }
+.desc{
+  text-align: left;
+}
+
+
+.datasets{
+  margin-bottom: 3em;
+}

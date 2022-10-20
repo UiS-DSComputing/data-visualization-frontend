@@ -1,0 +1,78 @@
+.container{
+    position: relative;
+    margin: 25px 0 15px;
+    border: 2px dotted lightgray;
+    padding: 35px 20px;
+    border-radius: 6px;
+    background-color: white;
+    text-align: center;
+}
+
+.form{
+    font-size: 18px;
+    display: block;
+    width: 100%;
+    border: none;
+    text-transform: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+}
+
+.form:focus{
+    outline: none;
+}
+
+.container label{
+    top: -21px;
+    font-size: 13px;
+    color: black;
+    left: 0;
+    position: absolute;
+}
+.dropbox p{
+    font-weight: bold;
+    letter-spacing: 2.2px;
+    margin-top: 0;
+    text-align: center;
+}
+
+.upbtn{
+    background-color: transparent;
+    border: 1px solid #337aff;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 0.2em;
+    color: #337aff;
+    margin-left: 1em;
+}
+
+.list{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.dataCon{
+    padding: 0.25rem;
+    width: 20%;
+    height: 120px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.img{
+    width: 100%;
+}
+.item{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-left: 1em;
+}
+.itemCon{
+    display: flex;
+}
