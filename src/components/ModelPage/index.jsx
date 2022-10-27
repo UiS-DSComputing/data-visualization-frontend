@@ -1,13 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
-import logo from "../../assets/a1.JPG";
-import dp from "./index.module.css";
+import logo from "../../assets/bert.JPG";
+import dp from "../DatasetPage/index.module.css";
 import axios from "axios";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/";
 
-function DatasetPage(props) {
+function ModelPage(props) {
   let { id } = useParams();
 
   const dispatch1 = useDispatch();
@@ -23,14 +23,16 @@ function DatasetPage(props) {
   const [data, setData] = useState({
     dataset:"tmp"
   });
+  const longD=`BERT, or Bidirectional Encoder Representations from Transformers, improves upon standard Transformers by removing the unidirectionality constraint by using a masked language model (MLM) pre-training objective. The masked language model randomly masks some of the tokens from the input, and the objective is to predict the original vocabulary id of the masked word based only on its context. Unlike left-to-right language model pre-training, the MLM objective enables the representation to fuse the left and the right context, which allows us to pre-train a deep bidirectional Transformer.In addition to the masked language model, BERT uses a next sentence prediction task that jointly pre-trains text-pair representations.
+  There are two steps in BERT: pre-training and fine-tuning. During pre-training, the model is trained on unlabeled data over different pre-training tasks. For fine-tuning, the BERT model is first initialized with the pre-trained parameters, and all of the parameters are fine-tuned using labeled data from the downstream tasks. Each downstream task has separate fine-tuned models, even though they are initialized with the same pre-trained parameters.`
   const getDB = async (id) => {
     try {
       await axios
-        .get(`${BACKEND_API_PREFIX}/dataset/${id}`, config)
+        .get(`${BACKEND_API_PREFIX}/model/${id}`, config)
         .then((res) => {
           console.log(res.data);
           setData(res.data);
-          if(res.data.url.includes("permission/apply")){
+          if(res.data.url==="url to application"){
             setMine(false)
           }else{
             setMine(true)
@@ -53,19 +55,8 @@ function DatasetPage(props) {
   }
 
   function handleRD() {
-    // send request for Using
-    window.alert("Request sended.")
-    // console.log(id)
-    sendREQ(id)
+    // send request for Download
   }
-
-  const sendREQ = async (id) => {
-      await axios
-        .get(`${BACKEND_API_PREFIX}/dataset/permission/apply/${id}`, config)
-        .then((res) => {
-        });
-  };
-
 
   const handleDw = async () => {
     try {
@@ -100,10 +91,10 @@ function DatasetPage(props) {
       </button>
       <div className={dp.main}>
         <div className={dp.tags}>
-          <div className={dp.tag}>#{data.datatype}</div>
-          <div className={dp.tag}>#{data.filetype}</div>
+          <div className={dp.tag}>#{data.training_set}</div>
+          <div className={dp.tag}>#{data.architecture}</div>
         </div>
-        <h1>{data.dataset}</h1>
+        <h1>{data.task}</h1>
         <div>Owner: {data.name}</div>
         <div className={dp.info}>
           <div className={dp.desc}>{data.description}</div>
@@ -114,13 +105,13 @@ function DatasetPage(props) {
             Request Sample
           </button>
           <button className={dp.apply} onClick={() => handleRD()}>
-            Buy the dataset
+            Buy the Model
           </button>
           <button className={dp.apply}>
-            Rent the dataset
+            Rent the Model
           </button>
         </div>}
-        {mine&&<button className={dp.apply} onClick={()=>handleDw()}>Download Dataset</button>}
+        {mine&&<button className={dp.apply} onClick={()=>handleDw()}>Download Model</button>}
         {/* <div className={dp.other}>
           <h3 className={dp.stitle}>Dataset Users</h3>
           <div>UiS</div>
@@ -130,4 +121,4 @@ function DatasetPage(props) {
   );
 }
 
-export default DatasetPage;
+export default ModelPage;

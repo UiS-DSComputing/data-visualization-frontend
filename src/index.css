@@ -228,10 +228,17 @@ sub {
 
 sup {
   top: -.5em; }
-
+input{
+  padding: 0.5em 1em;
+}
+button{
+  padding: 0.5em 1em;
+}
 a {
   color: #3366ff;
   text-decoration: none;
+  width: 100%;
+  text-align: center;
   background-color: transparent; }
   a:hover {
     color: #0039e6;
@@ -292,15 +299,6 @@ button:focus {
   outline: 1px dotted;
   outline: 5px auto -webkit-focus-ring-color; }
 
-input,
-button,
-select,
-optgroup,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit; }
 
 button,
 input {
@@ -9658,8 +9656,8 @@ body {
     position: relative;
     padding: 0;
     height: 38px;
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
     font-size: 13px;
     color: #596882; }
     .az-profile-menu .dropdown-item i {
@@ -37474,14 +37472,7 @@ body {
 .wd-100v {
   width: 100vw; }
 
-  select {
-    padding: 10px;
-    width: 200px;
-    border: 1px solid rgb(59, 114, 185);
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1rem;
-  }
+
 
   .chart-filter {
     margin: 1rem 0rem 0rem 1rem;

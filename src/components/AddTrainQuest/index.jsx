@@ -61,21 +61,29 @@ function AddTrainRequest(props) {
 
   const addNewRequest = async (newTask) => {
     try {
-      let date = new Date();
       await axios({
         method: "post",
         url: `${BACKEND_API_PREFIX}/start/training/server`,
-        timeout: 300000,
+        timeout: 30000,
         data: JSON.stringify(newTask),
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "content-type": "application/json",
+        },
       }).then((res) => {
-        newTask.id = res.data.id;
-        newTask.link = res.data.link;
-        newTask.ip = res.data.ip;
-        newTask.port = res.data.port;
-        newTask.updateTask =
-          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-        console.log("update send");
+        // let date = new Date();
+        // new training info
+        // newTask.id = res.data.id;
+        // newTask.code = 30000;
+        // newTask.lastUpdate =
+        //   date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        // newTask.clients = clients;
+        // newTask.status = "waiting";
+        // newTask.rounds = np;
+        // newTask.id = res.data.id;
+        // newTask.link = res.data.link;
+        // newTask.ip = res.data.ip;
+        // newTask.port = res.data.port;
         addRequest(1, newTask);
       });
     } catch (err) {
@@ -87,22 +95,18 @@ function AddTrainRequest(props) {
   };
 
   function onConfirm() {
-    let date = new Date();
-    let showid = nanoid();
+    
+    let uniId = nanoid();
     // initial status : waiting
     let newTask = {
-      showId: showid,
+      uniId: uniId,
       task: taskName,
-      rounds: np,
-      clients: clients,
+      epochs: parseInt(np),
       model: model,
-      status: "waiting",
-      metrics: dataset,
-      agr: agr,
-      lastUpdate:
-        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
+      dataset: dataset,
+      appr: agr,
     };
-    addRequest(0, newTask);
+    // addRequest(0, newTask);
     addNewRequest(newTask);
     handleClose(false);
   }
@@ -199,7 +203,7 @@ function AddTrainRequest(props) {
               id="client1"
               name="client1"
             />
-             &nbsp;Client(1), Norway
+            &nbsp;Client(1), Norway
           </label>
           <label>
             <input
@@ -208,7 +212,7 @@ function AddTrainRequest(props) {
               id="client2"
               name="client2"
             />
-             &nbsp;Client(2), Norway
+            &nbsp;Client(2), Norway
           </label>
           <label>
             <input
@@ -217,7 +221,7 @@ function AddTrainRequest(props) {
               id="client3"
               name="client3"
             />
-             &nbsp;Client(3), Germany
+            &nbsp;Client(3), Germany
           </label>
         </div>
       </div>

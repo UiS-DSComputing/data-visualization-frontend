@@ -14,7 +14,13 @@
 }
 
 
-
+.board{
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #dcd8d8;
+    padding: 3em 5em;
+    border-radius: 0.5em;
+}
 
 .radio_toolbar{
     display: flex;
@@ -49,7 +55,7 @@
 .enter{
     border-radius: 0.5em;
     border: 1px solid;
-    padding: 0.2em;
+    padding: 0.5em 1em;
     width: fit-content;
 }
 
@@ -88,4 +94,12 @@
     text-align: right;
     color: #3366ff;
     font-size: 0.8em;
+}
+
+.tx{
+    display: flex;
+    height: 200px;
+}
+.tx textarea{
+    width: 400px;
 }

@@ -8,7 +8,7 @@
   
   .lists td, .lists th {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 0 8px;
   }
   
   .lists tr:nth-child(even){background-color: #f2f2f2;}
@@ -41,6 +41,11 @@
     align-items: flex-end;
   }
 .desc{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   text-align: left;
 }
 

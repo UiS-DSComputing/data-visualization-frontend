@@ -13,14 +13,18 @@
 .info{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .desc{
     padding: 2em;
+    white-space: pre-line;
+    line-height: 2em;
+    word-break: break-all;
 }
 
 .img{
-    width: 20%;
+    width: 30%;
     height: fit-content;
 }
 
@@ -48,5 +52,6 @@
     color: white;
     padding: 0.5em 2em;
     border-radius: 0.2em;
-    margin: 4em 0 0;
+    margin: 5em 1em 0;
+    width: fit-content;
 }

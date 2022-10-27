@@ -1,0 +1,97 @@
+.layout{
+    height: 100vh;
+    border: 1px solid gray;
+    border-radius: 1em;
+    padding: 2em 4em;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.main{
+    display: flex;
+    height: 90%;
+}
+
+.types{
+    border-right: 1px solid #d4d4d4;
+    height: 100%;
+    text-align: left;
+}
+
+.type{
+    width: 150px;
+    padding: 0.5em 2em 0.5em 0.5em;
+}
+
+.type_active{
+    background-color: #337aff;
+    color:white;
+    width: 150px;
+    padding: 0.5em 2em 0.5em 0.5em;
+    border-radius: 0.2em;
+
+}
+.msgs{
+    width: 100%;
+    overflow-y: scroll;
+}
+.msg{
+    border: 1px solid rgb(174, 171, 171);
+    padding: 1em 2em;
+    width: 90%;
+    margin-left: 1em;
+    margin-bottom: 1em;
+    border-radius: 0.5em;
+}
+
+.btn_row button{
+    border:none;
+    padding: 0.5em 1em;
+    border-radius: 0.2em;
+    margin-right:1em;
+    color:white;
+}
+
+.ref{
+   background:#b31313;
+}
+
+.acc{
+    background:#0a7639;
+ }
+
+ .de{
+    width: fit-content;
+ }
+
+
+ .msg_main{
+    border-top: 1px solid #666;
+    margin: 1em 0 0;
+    padding: 1em 0 0;
+ }
+
+ .btn_row{
+    margin-top: 1em;
+ }
+
+ .title{
+    display: flex;
+    justify-content: space-between;
+ }
+
+ .btn{
+    width: 100%;
+    text-align: right;
+    color: #337aff;
+ }
+
+ .fl_btn{
+    border: none;
+    background: #3366ff;
+    color: white;
+    padding: 0.5em 2em;
+    border-radius: 0.2em;
+    margin: 5em 1em 0;
+    width: fit-content;
+ }

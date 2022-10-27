@@ -1,34 +1,102 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../store/";
 import pl from "./index.module.css";
-import logo from "../../assets/uis.png";
 import { Link } from "react-router-dom";
+import { MdDeleteForever } from "react-icons/md";
 
 function Panel() {
-  const datas = [
-    {
-      id: 1,
-      img: logo,
-      name: "CIFAR10",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images.",
-      ftype: "Images",
-      dtype: "CV",
-    },
-  ];
-  const models = [
-    {
-      name: "Language Model",
-      arc: "Bert",
-      ts: "Corpus",
-      size: "1.3G",
-    },
-  ];
+  const dispatch1 = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.accessToken);
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const BACKEND_API_PREFIX =
+    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+
+  const [datas, setDatas] = useState([]);
+  const [models, setModels] = useState([]);
+
+  const getAllDBs = async () => {
+    try {
+      await axios.get(`${BACKEND_API_PREFIX}/datasets`, config).then((res) => {
+        // update all tasks
+        setDatas(res.data);
+      });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  const getAllMDs = async () => {
+    try {
+      await axios.get(`${BACKEND_API_PREFIX}/models`, config).then((res) => {
+        // update all tasks
+        setModels(res.data);
+      });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAllDBs();
+    getAllMDs();
+  }, []);
+
+  const delDB = async (id) => {
+    try {
+      await axios
+        .delete(`${BACKEND_API_PREFIX}/dataset/delete/${id}`, config)
+        .then((res) => {});
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  const delMD = async (id) => {
+    try {
+      await axios
+        .delete(`${BACKEND_API_PREFIX}/model/delete/${id}`, config)
+        .then((res) => {});
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  function handelDelDB(id) {
+    delDB(id);
+    let tmp = datas.filter((item) => item.id !== id);
+    setDatas(tmp);
+  }
+
+  function handelDelMD(id) {
+    delMD(id);
+    let tmp = models.filter((item) => item.id !== id);
+    setModels(tmp);
+  }
+
   return (
     <div className={pl.layout}>
       <div className={pl.datasets}>
         <div className={pl.frow}>
-          <h4>My Datasets</h4>
+          <h4 style={{width:"200px"}}>My Datasets</h4>
           <Link to={"/upload"}>
-            {" "}
             <button className={pl.addbtn}>Add Dataset</button>
           </Link>
         </div>
@@ -42,6 +110,7 @@ function Panel() {
               <th>Data Type</th>
               <th>File Type</th>
               <th>Affiliation</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -49,12 +118,16 @@ function Panel() {
               return (
                 <tr key={i}>
                   <td>{i + 1}</td>
-                  <td>{item.name}</td>
-                  {/* <td>{item.logo}</td> */}
-                  <td className={pl.desc}>{item.desc}</td>
-                  <td>{item.dtype}</td>
-                  <td>{item.ftype}</td>
-                  <td>{item.aff}</td>
+                  <td>
+                    <Link to={"/dataset/" + item.id}>{item.dataset}</Link>
+                  </td>
+                  <td className={pl.desc}>{item.description}</td>
+                  <td>{item.datatype}</td>
+                  <td>{item.filetype}</td>
+                  <td>{item.affiliation}</td>
+                  <td>
+                    <MdDeleteForever onClick={() => handelDelDB(item.id)} />
+                  </td>
                 </tr>
               );
             })}
@@ -63,17 +136,21 @@ function Panel() {
       </div>
       <div className={pl.datasets}>
         <div className={pl.frow}>
-          <h4>My Models</h4>
-          <button className={pl.addbtn}>Add Model</button>
+          <h4 style={{width:"200px"}}>My Models</h4>
+          <Link to="/uploadmd">
+            <button className={pl.addbtn}>Add Model</button>
+          </Link>
         </div>
         <table className={pl.lists}>
           <thead>
             <tr>
               <th>No.</th>
               <th>Task</th>
+              <th>Description</th>
               <th>Architecture</th>
               <th>Training Set</th>
               <th>Model Size</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -81,10 +158,14 @@ function Panel() {
               return (
                 <tr key={i}>
                   <td>{i + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.arc}</td>
-                  <td>{item.ts}</td>
-                  <td>{item.size}</td>
+                  <td>{item.task}</td>
+                  <td className={pl.desc}>{item.description}</td>
+                  <td>{item.architecture}</td>
+                  <td>{item.training_set}</td>
+                  <td>1.3G</td>
+                  <td>
+                    <MdDeleteForever onClick={() => handelDelMD(item.id)} />
+                  </td>
                 </tr>
               );
             })}

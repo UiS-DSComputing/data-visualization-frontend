@@ -1,12 +1,12 @@
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import dm from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/";
 import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
-import logo from "../../assets/uis.png";
+import logo from "../../assets/a1.JPG";
 
 import axios from "axios";
 
@@ -19,98 +19,55 @@ function DataMarket() {
     headers: { Authorization: `Bearer ${token}` },
   };
   const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 
-  const moTypes = [
-    { name: "Images", number: 1289 },
-    { name: "Video", number: 678 },
-    { name: "Texts", number: 523 },
-    { name: "Audio", number: 339 },
-    { name: "Medical", number: 89 },
-    { name: "Environment", number: 73 },
-    { name: "3D", number: 34 },
-    { name: "Graphs", number: 25 },
-  ];
-  const taskTypes = [
-    { name: "Question Answering", number: 293 },
-    { name: "Semantic Segmentation", number: 223 },
-    { name: "Object Detection", number: 213 },
-    { name: "Speech Recognition", number: 184 },
-    { name: "Image Classification", number: 113 },
-  ];
-  const langTypes = [
-    { name: "English", number: 1767 },
-    { name: "Chinese", number: 267 },
-    { name: "German", number: 133 },
-    { name: "French", number: 108 },
-    { name: "Spanish", number: 91 },
-  ];
-  const datas = [
-    {
-      id: 1,
-      img: logo,
-      title: "CIFAR10  (Norway 1)",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
-      mod: "Images",
-      lang: "Chinese",
-    },
-    {
-      id: 2,
-      img: logo,
-      title: "CIFAR10 (Norway 2)",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
-      mod: "Texts",
-      lang: "English",
-    },
-    {
-      id: 3,
-      img: logo,
-      title: "ImageNet",
-      desc: "The ImageNet dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
-      mod: "Images",
-      lang: "English",
-    },
+  const [dataTypes, setDataTypes] = useState([
+    { name: "CV", value: "CV", number: 0 },
+    { name: "NLP", value: "NLP", number: 0 },
+    { name: "ASR", value: "ASR", number: 0 },
+  ]);
+  const [fileTypes, setFileTypes] = useState([
+    { name: "Image", value: "image", number: 0 },
+    { name: "Video", value: "video", number: 0 },
+    { name: "Texts", value: "text", number: 0 },
+    { name: "Audio", value: "audio", number: 0 },
+    { name: "CSV", value: "csv", number: 0 },
+  ]);
+  const [lists, setLists] = useState();
+  const [showList, setShowList] = useState([{
+    dataset:"tmp"
+  }]);
 
-    {
-      id: 4,
-      img: logo,
-      title: "COCO",
-      desc: "The COCO dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
-      mod: "Video",
-      lang: "German",
-    },
-    {
-      id: 5,
-      img: logo,
-      title: "VIDEO",
-      desc: "The CIFAR-10 dataset (Canadian Institute for Advanced Research, 10 classes) is a subset of the Tiny Images dataset and consists of 60000 32x32 color images. The images are labelled with one of 10 mutually exclusive classes: airplane, automobile (but not truck or pickup truck), bird, cat, deer, dog, frog, horse, ship, and truck (but not pickup truck). There are 6000 images per class with 5000 training and 1000 testing images per class.",
-      mod: "Texts",
-      lang: "French",
-    },
-  ];
-  const [lists, setLists] = useState([])
-  const [dataShow, setdataShow] = useState(datas)
-
-  function handleFilter(type,title){
-    let tmp=[]
-    if(title==="Modality"){
-      tmp=datas.filter(item=>item.mod===type)
-    }else if(title==="Task"){
-      tmp=datas.filter(item=>item.mod===type)
-    }else{
-      tmp=datas.filter(item=>item.lang===type)
+  function handleFilter(type, title) {
+    let tmp = [];
+    if (title === "DataSet") {
+      tmp = lists.filter((item) => item.datatype === type);
+    } else if (title === "File") {
+      tmp = lists.filter((item) => item.filetype === type);
     }
-    setdataShow(tmp)
-    console.log(type);
-    console.log(tmp);
+    setShowList(tmp);
   }
+
   const getList = async () => {
     try {
       await axios
-        .get(`${BACKEND_API_PREFIX}/datasets`,config)
+        .get(`${BACKEND_API_PREFIX}/datasets/all`, config)
         .then((res) => {
-          console.log(res.data)
-          setLists(res.data)
+          setLists(res.data);
+          setShowList(res.data);
+          let tmp = res.data;
+          let tmpD = dataTypes.map((item) => {
+            let n = tmp.filter((x) => x.datatype === item.name);
+            item.number = n.length;
+            return item;
+          });
+          setDataTypes(tmpD);
+          let tmpF = fileTypes.map((item) => {
+            let n = tmp.filter((x) => x.filetype === item.value);
+            item.number = n.length;
+            return item;
+          });
+          setFileTypes(tmpF);
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -118,13 +75,12 @@ function DataMarket() {
         navigate("/login");
       }
     }
-
-  }
+  };
 
   useEffect(() => {
-    // getList()
-  }, [])
-  
+    getList();
+  }, []);
+
   return (
     <div className={dm.layout}>
       <div className={dm.filters}>
@@ -139,14 +95,13 @@ function DataMarket() {
             <option>Newest</option>
           </select>
         </div>
-        <Filter title="Modality" types={moTypes} handleFilter={handleFilter}/>
-        <Filter title="Task" types={taskTypes} handleFilter={handleFilter} />
-        <Filter title="Language" types={langTypes} handleFilter={handleFilter} />
+        <Filter title="DataSet" types={dataTypes} handleFilter={handleFilter} />
+        <Filter title="File" types={fileTypes} handleFilter={handleFilter} />
       </div>
       <div className={dm.results}>
-        <h3>{dataShow.length} dataset results</h3>
-        {datas.map((item)=>{
-          return <Row key={item.id} data={item} />;
+        <h3>{showList.length} dataset results</h3>
+        {showList.map((item,i) => {
+          return <Row key={i} data={item} />;
         })}
       </div>
     </div>
@@ -156,7 +111,7 @@ function Filter(props) {
   const { types, title, handleFilter } = props;
 
   function changeFilter(type) {
-    handleFilter(type,title)
+    handleFilter(type, title);
   }
   return (
     <div className={dm.filter}>
@@ -165,9 +120,9 @@ function Filter(props) {
         {types.map((item) => {
           return (
             <div
-              key={item.name}
+              key={item.value}
               className={dm.item}
-              onClick={()=>changeFilter(item.name)}
+              onClick={() => changeFilter(item.value)}
             >
               <div className={dm.name}>{item.name}</div>
               <div className={dm.number}>{item.number}</div>
@@ -185,10 +140,10 @@ function Row(props) {
     <div className={dm.row}>
       <img src={logo} style={{ width: "135px" }}></img>
       <div className={dm.row_info}>
-        <Link to={"/dataset/:"+data.id}>
-          <h3 className={dm.row_title}>{data.title}</h3>
+        <Link to={"/dataset/" + data.id}>
+          <h3 className={dm.row_title} style={{textAlign:"left"}}>{data.dataset}</h3>
         </Link>
-        <div>{data.desc}</div>
+        <div className={dm.desc}>{data.description}</div>
       </div>
     </div>
   );

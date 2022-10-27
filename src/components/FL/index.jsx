@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import { IoAddCircleOutline, IoDownloadOutline } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/";
@@ -8,7 +9,6 @@ import fl from "./index.module.css";
 import PopBox from "../PopBox";
 import { GrClose, GrServers } from "react-icons/gr";
 import { AiFillRightSquare } from "react-icons/ai";
-import { Link } from "react-router-dom";
 import tf from "../../assets/tf.png";
 
 function FL() {
@@ -32,34 +32,20 @@ function Table() {
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
-  const [allTasks, setAllTasks] = useState([
-  //   { showId:"lYk-E9HGneaFXjaQr35i6",
-  //   task:"TaskC",
-  //   rounds:"10",
-  //   clients:["client1","client2"],
-  //   model:"ResNet",
-  //   status:"finished",
-  //   metrics:"CIFAR10",
-  //   agr:"FedSGD",
-  //   lastUpdate:"21:2:34",
-  //   id: "03b0158ebdeec239863bdd82f4faff8c3ac367d58277098213608b6f2c38f4d4",
-  //   ip: "161.97.133.43",
-  //   link: "/download/1086104734408141898.zip",
-  //   port: 52463
-  // }
-  ]);
+  const [allTasks, setAllTasks] = useState([]);
   // tasks for filter
   // const [showTasks, setShowTasks] = useState([]);
   const colors = {
     running: { color: "#278327", show: "Running" },
-    stooped: { color: "#a34242", show: "Stopped" },
+    stopped: { color: "#a34242", show: "Stopped" },
     finished: { color: "#f1ca58", show: "Finished" },
     waiting: { color: "#888", show: "Waiting" },
   };
   const status = [
     {
       id: 0,
-      value: "All",
+      value: "all",
+      show: "All",
       color: "black",
     },
     {
@@ -87,9 +73,10 @@ function Table() {
       color: "#888",
     },
   ];
+  const [complete, setComplete] = useState(false);
   const [showCmd, setShowCmd] = useState(false);
   const [cmdTask, setCmdTask] = useState({});
-  const [type, setType] = useState("All");
+  const [type, setType] = useState("all");
   const [popType, setPopType] = useState("cmd");
 
   function PopUp(is) {
@@ -109,67 +96,105 @@ function Table() {
     setShowCmd(is);
     setLocateId(id);
   }
+
   function addRequest(type, task) {
-    if (type === 0) {
-      // add new request
-      let tmptasksn = allTasks;
-      tmptasksn.push(task);
-      setAllTasks(tmptasksn);
-    } else {
-      // update exist request
-      let date = new Date();
-      const tmptasks = allTasks.map((item) => {
-        if (item.showId === task.showId) {
-          item.id = task.id;
+    getAllTrainings()
+  }
+
+  const getAllTrainings = async () => {
+    try {
+      await axios.get(`${BACKEND_API_PREFIX}/trainings`, config).then((res) => {
+        // update all tasks
+        let date = new Date();
+        let tmp = res.data;
+        let tmpp = tmp.map((item) => {
           item.lastUpdate =
             date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-          item.link = task.link;
-          item.ip = task.ip;
-          item.port = task.port;
+          if (item.status === "running" || item.status==="exited" || item.status==="stopped") {
+            item.code = 20000;
+            if(item.status==="exited"){
+              item.status="finished"
+            }
+          } else{
+            item.code = 30000;
+            item.status="waiting"
+          }
           return item;
-        } else {
-          return item;
-        }
+        });
+        setAllTasks(tmpp);
+        return 1;
       });
-      setAllTasks(tmptasks);
-    }
-  }
-
-  function updateTask(task) {
-    let date = new Date();
-    const tmptasks = allTasks.map((item) => {
-      if (item.showId === task.showId) {
-        item.id = task.id;
-        item.lastUpdate =
-          date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-        item.link = task.link;
-        item.ip = task.ip;
-        item.port = task.port;
-        return item;
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
       }
-    });
-    setAllTasks(tmptasks);
-  }
+    }
+  };
 
   const updateStatus = async (task) => {
+    //update single unbuild
     let date = new Date();
     try {
       await axios
         .get(`${BACKEND_API_PREFIX}/training/status/${task.id}`, config)
         .then((res) => {
           // update tasks in axios
-          task.status = res.data.status;
-          task.lastUpdate =
-            date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+          console.log("single");
+          if (res.data.code === 20000) {
+            let tmpTasks = allTasks.map((item) => {
+              if (item.id === task.id) {
+                task.status = item.status;
+                task.lastUpdate =
+                  date.getHours() +
+                  ":" +
+                  date.getMinutes() +
+                  ":" +
+                  date.getSeconds();
+                task.code = 20000;
+                return task;
+              } else {
+                return item;
+              }
+            });
+            setAllTasks(tmpTasks);
+          }
+          return 0;
+        });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
 
-          let tmptasks = allTasks.map((item) => {
-            if (item.id === task.id) {
-              return task;
-            } else {
-              return item;
+  const updateAllStatus = async () => {
+    let date = new Date();
+    try {
+      await axios
+        .get(`${BACKEND_API_PREFIX}/training/all/status`, config)
+        .then((res) => {
+          // update tasks
+          let tmp = res.data;
+          let tmpTasks = allTasks.map((task) => {
+            for (let item of tmp) {
+              if (item.id === task.id) {
+                task.status = item.status;
+                if(item.status==="exited"){
+                  item.status="finished"
+                }
+                task.lastUpdate =
+                  date.getHours() +
+                  ":" +
+                  date.getMinutes() +
+                  ":" +
+                  date.getSeconds();
+              }
             }
+            return task
           });
-          setAllTasks(tmptasks);
+          setAllTasks(tmpTasks);
         });
     } catch (err) {
       if (err.response.status === 401) {
@@ -180,42 +205,45 @@ function Table() {
   };
 
   useEffect(() => {
+    getAllTrainings();
     const interval = setInterval(() => {
-      if (allTasks.length > 0) {
-        const tmp = allTasks.map((task) => {
-          if (task.id !== undefined && task.id!=="03b0158ebdeec239863bdd82f4faff8c3ac367d58277098213608b6f2c38f4d4") {
-            updateStatus(task);
-          }
-          return task;
-        });
-        // setAllTasks(tmp);
+      console.log(allTasks.length)
+      if(allTasks.length===0){
+        getAllTrainings()
       }
-      // setShowTasks(tmp);
-    }, 30000);
-
+      if (allTasks.length > 0) {
+        // update builded tasks
+        let builded = allTasks.filter((item) => item.code === 20000);
+        let notBuilded = allTasks.filter((item) => item.code !== 20000);
+        console.log(notBuilded)
+        if (notBuilded.length !== 0) {
+          let tmp = notBuilded.map((item) => updateStatus(item));
+        }
+        if (builded.length !== 0) {
+          updateAllStatus();
+        }
+      }
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 
   function handleFilter(type) {
     let tmp = [];
-    if (type === "Running") {
-      tmp = allTasks.filter((task) => task.status === 0);
-    } else if (type === "Stopped") {
-      tmp = allTasks.filter((task) => task.status === 1);
-    } else if (type === "Finished") {
-      tmp = allTasks.filter((task) => task.status === 2);
+    if (type === "all") {
+      getAllTrainings();
     } else {
-      tmp = allTasks;
+      getAllTrainings();
+      tmp = allTasks.filter((task) => task.status === type);
+      setAllTasks(tmp);
     }
-    // setShowTasks(tmp);
     setType(type);
   }
 
-  const handleDownload = async (link) => {
+  const handleDownload = async (item) => {
     try {
       await axios({
         type: "get",
-        url: `${BACKEND_API_PREFIX}${link}`,
+        url: `${BACKEND_API_PREFIX}${item.download}`,
         responseType: "blob",
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => {
@@ -225,7 +253,6 @@ function Table() {
         link.setAttribute("download", "file.zip"); //or any other extension
         document.body.appendChild(link);
         link.click();
-
         // clean up "a" element & remove ObjectURL
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
@@ -237,6 +264,26 @@ function Table() {
       }
     }
   };
+
+  const Del = async (id) => {
+    try {
+      await axios
+        .delete(`${BACKEND_API_PREFIX}/training/delete/${id}`, config)
+        .then((res) => {
+        });
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch1(authActions.logout());
+        navigate("/login");
+      }
+    }
+  };
+
+  function handleDel(item){
+      Del(item.id)
+      let tmp = allTasks.filter((task) => task.id !== item.id);
+      setAllTasks(tmp);
+  }
 
   return (
     <div>
@@ -258,7 +305,7 @@ function Table() {
                     name="model"
                     onClick={() => handleFilter(item.value)}
                   />
-                  {item.value}
+                  {item.show}
                 </label>
               );
             })}
@@ -284,6 +331,7 @@ function Table() {
             <th>Commands</th>
             <th>Model Path</th>
             <th>Tensor Board</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -291,7 +339,10 @@ function Table() {
             return (
               <tr key={i}>
                 <td>{i + 1}</td>
-                <td onClick={() => showMap(true, item.id)}>{item.showId}</td>
+                {item.status !== "waiting" && (
+                  <td onClick={() => showMap(true, item.id)}>{item.job_id}</td>
+                )}
+                {item.status === "waiting" && <td>{item.job_id}</td>}
                 <td>{item.task}</td>
                 <td>{item.rounds}</td>
                 <td
@@ -302,30 +353,64 @@ function Table() {
                 >
                   {colors[item.status].show}
                 </td>
-                <td>{item.model}</td>
+                <td>{item.global_model}</td>
                 <td>{item.metrics}</td>
                 <td>{item.lastUpdate}</td>
-                <td onClick={() => handleDownload(item.link)}>
-                  <IoDownloadOutline />
-                </td>
-                <td onClick={() => handleCheck(item)}>check commands</td>
-                <td><a href="http://161.97.133.43:8001/" target="_blank">models</a></td>
+                {item.status !== "waiting" && (
+                  <td onClick={() => handleDownload(item)}>
+                    {" "}
+                    <IoDownloadOutline />
+                  </td>
+                )}
+                {item.status === "waiting" && (
+                  <td style={{ color: "#888" }}>
+                    {" "}
+                    <IoDownloadOutline />
+                  </td>
+                )}
+                {item.status !== "waiting" && (
+                  <td onClick={() => handleCheck(item)}>check commands</td>
+                )}
+                {item.status === "waiting" && (
+                  <td style={{ color: "#888" }}>check commands</td>
+                )}
+                {item.status !== "waiting" && (
+                  <td>
+                    <a href={"http://161.97.133.43:"+item.global_model_port+"/"} target="_blank" >
+                      models
+                    </a>
+                  </td>
+                )}
+                {item.status === "waiting" && (
+                  <td>
+                    <a style={{ color: "#888" }} target="_blank">
+                      models
+                    </a>
+                  </td>
+                )}
+                {item.status !== "waiting" && (
+                  <td>
+                    <a href={"http://161.97.133.43:"+item.tensorboard_port+"/"} target="_blank">
+                      <img src={tf} style={{ width: "20px" }}></img>
+                    </a>
+                  </td>
+                )}
+                {item.status === "waiting" && (
+                  <td>
+                    <a target="_blank">
+                      <img src={tf} style={{ width: "20px" }}></img>
+                    </a>
+                  </td>
+                )}
                 <td>
-                  <a href="http://161.97.133.43:8090/"  target="_blank"><img src={tf} style={{ width: "20px" }}></img></a>
+                  <MdDeleteForever onClick={() => handleDel(item)} />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      {pop && (
-        <PopBox
-          PopUp={PopUp}
-          type={"request"}
-          addRequest={addRequest}
-          updateTask={updateTask}
-        />
-      )}
+      {pop && <PopBox PopUp={PopUp} type={"request"} addRequest={addRequest} />}
       {showCmd && (
         <PopCmd
           handlePopcmd={handlePopcmd}
@@ -368,7 +453,7 @@ function PopCmd(props) {
 
 function CMD(props) {
   const { cmdTask } = props;
-  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.model} --aggr ${cmdTask.agr} --num_com ${cmdTask.rounds}`;
+  const client = `python client.py --task ${cmdTask.task} --dataset ${cmdTask.metrics} --model ${cmdTask.global_model} --aggr ${cmdTask.appr} --num_com ${cmdTask.rounds}`;
 
   const win = `./run.ps1 -ip ${cmdTask.ip} -port ${cmdTask.port}`;
   const unix = `bash run.sh -h ${cmdTask.ip} -p ${cmdTask.port}`;
@@ -434,6 +519,8 @@ function CMD(props) {
 
 function Map(props) {
   const { locateId } = props;
+  const [has, setHas] = useState(false)
+  const msg="No Client connected to server."
   const token = useSelector((state) => state.accessToken);
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -442,20 +529,22 @@ function Map(props) {
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
 
   const getLocation = async () => {
-    await axios
+      await axios
       .get(`${BACKEND_API_PREFIX}/training/connections/${locateId}`, config)
       .then((res) => {
         console.log(res.data);
+        setHas(true)
       });
+
   };
 
   useEffect(() => {
-    // getLocation();
+    getLocation();
   }, []);
 
   return (
     <div className={fl.cmdlayout}>
-      <h3>Locations:</h3>
+      {has&&<div><h3>Locations:</h3>
       <div>
         <GrServers />
         &nbsp;&nbsp;Server: Germany
@@ -469,7 +558,9 @@ function Map(props) {
           <AiFillRightSquare />
           &nbsp;&nbsp;Client (2), Norway
         </div>
-      </div>
+      </div></div>
+    }
+      {!has&&<div>{msg}</div>}
     </div>
   );
 }

@@ -50,7 +50,7 @@
 .enter{
     border-radius: 0.5em;
     border: 1px solid;
-    padding: 0.2em;
+    padding: 0.5em 1em;
     width: fit-content;
 }
 
@@ -61,7 +61,7 @@
 .btn{
     border: 1px solid;
     border-radius: 0.5em;
-    padding: 0.2em 1em;
+    padding: 0.5em 1em;
     background-color: #3366ff;
     color: white;
 }

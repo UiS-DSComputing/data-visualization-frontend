@@ -2,13 +2,13 @@ import axios from "axios";
 import React, { useEffect, useRef, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FileUpload from "../common/file-upload/file-upload.component";
-import sp from "./index.module.css";
+import sp from "../Upload/index.module.css";
 import { useNavigate } from "react-router-dom";
+
 
 function Upload() {
   const BACKEND_API_PREFIX =
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
-
   const token = useSelector((state) => state.accessToken);
   const config = {
     headers: {
@@ -18,31 +18,26 @@ function Upload() {
   };
   const childRef = useRef(null);
 
-  const [dataset, setDataset] = useState("");
-  const [datatype, setDatatype] = useState("");
-  const datatypes = ["CV", "NLP", "ASR"];
-  const [filetype, setFiletype] = useState("");
-  const files = ["image", "audio", "video", "text", "csv"];
-  const [aff, setAff] = useState("");
+  const [arch, setArch] = useState("");
+  const [sets, setSets] = useState("");
+  const [task, setTask] = useState("");
   const [desc, setDesc] = useState("");
+
 
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
-      case "TYPE":
-        setDatatype(action.value);
+      case "ARCH":
+        setArch(action.value);
         return { ...state };
-      case "FILE":
-        setFiletype(action.value);
+      case "SET":
+        setSets(action.value);
         return { ...state };
-      case "DATASET":
-        setDataset(action.value);
-        return { ...state };
-      case "AFF":
-        setAff(action.value);
+      case "TASK":
+        setTask(action.value);
         return { ...state };
       case "DESC":
         setDesc(action.value);
-        return { ...state };
+        return {...state}
       default:
         return { ...state };
     }
@@ -65,13 +60,14 @@ function Upload() {
     var formData = new FormData();
 
     formData.append("raw_file", inputVal, inputVal.name);
-    formData.append("dataset", dataset);
-    formData.append("datatype", datatype);
-    formData.append("file_type", filetype);
-    formData.append("affil", aff);
-    formData.append("desc", desc);
+    formData.append("architecture", arch);
+    formData.append("training_set", sets);
+    formData.append("task", task);
+    formData.append("description", desc);
+
+
     await axios
-      .post(`${BACKEND_API_PREFIX}/upload/dataset`, formData, config)
+      .post(`${BACKEND_API_PREFIX}/upload/model`, formData, config)
       .then(() => {
         childRef.current.removeFiles();
         navigate("/panel");
@@ -83,66 +79,39 @@ function Upload() {
       <div className={sp.board}>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className={sp.layout}>
-            <div className={sp.title}>Add New DataSet</div>
+            <div className={sp.title}>Add New Model</div>
             <div>
               Name: &nbsp; &nbsp;
               <input
                 type="text"
                 placeholder=""
                 onKeyUp={(e) =>
-                  dispatch({ type: "DATASET", value: e.target.value })
+                  dispatch({ type: "TASK", value: e.target.value })
                 }
                 className={sp.enter}
               />
             </div>
             <div>
-              Affiliation: &nbsp; &nbsp;
+              Architecture: &nbsp; &nbsp;
               <input
                 className={sp.enter}
                 type="text"
                 placeholder=""
                 onKeyUp={(e) =>
-                  dispatch({ type: "AFF", value: e.target.value })
+                  dispatch({ type: "ARCH", value: e.target.value })
                 }
               />
             </div>
-            <div className={sp.radio_toolbar} name="file" id="file">
-              <div>File Type: &nbsp;</div>
-              {files.map((item) => {
-                return (
-                  <label
-                    key={item}
-                    className={item === filetype ? sp.checked : sp.normal}
-                  >
-                    <input
-                      type="radio"
-                      value={item}
-                      name="model"
-                      onClick={(e) => dispatch({ type: "FILE", value: item })}
-                    />
-                    {item}
-                  </label>
-                );
-              })}
-            </div>
-            <div className={sp.radio_toolbar} name="datatype" id="datatype">
-              <div>Dataset Type: &nbsp;</div>
-              {datatypes.map((item) => {
-                return (
-                  <label
-                    key={item}
-                    className={item === datatype ? sp.checked : sp.normal}
-                  >
-                    <input
-                      type="radio"
-                      defaultValue={item}
-                      name="datatype"
-                      onClick={(e) => dispatch({ type: "TYPE", value: item })}
-                    />
-                    {item}
-                  </label>
-                );
-              })}
+            <div>
+              Training Set: &nbsp; &nbsp;
+              <input
+                className={sp.enter}
+                type="text"
+                placeholder=""
+                onKeyUp={(e) =>
+                  dispatch({ type: "SET", value: e.target.value })
+                }
+              />
             </div>
             <div className={sp.tx}>
               Description: &nbsp; &nbsp;

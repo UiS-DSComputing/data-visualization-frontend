@@ -22,6 +22,10 @@ import {AiOutlineCloudUpload} from 'react-icons/ai'
 // import ModelAccess from '../ModelAccess';
 // import RigAccess from '../RigAccess';
 import Upload from '../Upload';
+import UploadMD from '../uploadMD';
+import Notification from '../Notification';
+import AlertBox from '../AlertBox';
+import ModelPage from '../ModelPage';
 
 
 const Layout = () => {
@@ -40,7 +44,7 @@ const Layout = () => {
         <div className="az-header-left">
           <img src={logo} style={{width:"135px"}}></img>
         </div>
-        { isLoggedIn && 
+
         <div className="az-header-menu">
           <ul className="nav">
               <li className="nav-item">
@@ -67,17 +71,14 @@ const Layout = () => {
               <a className="nav-link"> <AiOutlineCloudUpload className='ricon'/> <Link to="/upload"> Upload </Link></a>
             </li> */}
             <li className="nav-item">
-              <a className="nav-link"> <BiTerminal className='ricon'/> <Link to="/fl"> FL </Link></a>
+              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/fl"> FL </Link></a>
             </li>
             <li className="nav-item">
-              <a className="nav-link"> <BiTerminal className='ricon'/> <Link to="/panel"> Panel </Link></a>
+              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/panel"> Panel </Link></a>
             </li>
           </ul>
         </div>
-        }
-        {isLoggedIn && 
-        <div className="az-header-right">
-          <a  className="az-header-search-link"><i className="fas fa-search"></i></a>
+        { isLoggedIn &&  <div className="az-header-right">
           <div className="dropdown az-profile-menu" style={{cursor: 'pointer'}}>
             <a  className="az-img-user"><img src={EquiLogo} alt=""/></a>
             <div className="dropdown-menu">
@@ -91,13 +92,20 @@ const Layout = () => {
                 <h6>{user_name}</h6>
                 <span>Active Member</span>
               </div>
-              <a className="dropdown-item"><i className="typcn typcn-edit"></i> Edit Profile</a>
+              <div style={{textAlign:"center"}}>
+              {/* <a className="dropdown-item"><i className="typcn typcn-edit"></i> Edit Profile</a>
               <a className="dropdown-item"><i className="typcn typcn-time"></i> Activity Logs</a>
-              <a className="dropdown-item"><i className="typcn typcn-cog-outline"></i> Account Settings</a>
-              <a className="dropdown-item"><i className="typcn typcn-cog-outline"></i> Notification</a>
-              <a className="dropdown-item" onClick={() => {dispatch(authActions.logout())}}><i className="typcn typcn-power-outline"></i> Sign Out</a>
+              <a className="dropdown-item"><i className="typcn typcn-cog-outline"></i> Account Settings</a> */}
+              <a className="dropdown-item">
+              <Link to='/notification'>
+                Notification
+              </Link>   
+              </a>
+              <a className="dropdown-item" style={{padding:"1em 0 0"}} onClick={() => {dispatch(authActions.logout())}}>Sign Out</a>
+              </div>
             </div>
           </div>
+          <AlertBox />
         </div>
         }
       </div>
@@ -114,14 +122,20 @@ const Layout = () => {
                 <Route path="/projects" index element={ isLoggedIn ? <Projects/> : <Navigate to="/login" />} />
                 <Route path="/modelMarket" index element={ isLoggedIn ? <ModelMarket/> : <Navigate to="/login" />} />
                 <Route path="/dashboard" element={ isLoggedIn ? <Dashboard /> : <Navigate to="/fl" />} />
-                <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/fl" />} />
-                <Route path="/dataset/:id" element={ isLoggedIn ? <Dataset /> : <Navigate to="/dataset:id" />} />
-                <Route path="/request/:id" element={ isLoggedIn ? <Request /> : <Navigate to="/request:id" />} />
-                <Route path="/panel" element={ isLoggedIn ? <Panel /> : <Navigate to="/panel" />} />
+                <Route path="/fl" element={ isLoggedIn ? <FL /> : <Navigate to="/login" />} />
+                <Route path="/dataset/:id" element={ isLoggedIn ? <Dataset /> : <Navigate to="/login" />} />
+                <Route path="/request/:id" element={ isLoggedIn ? <Request /> : <Navigate to="/login" />} />
+                <Route path="/panel" element={ isLoggedIn ? <Panel /> : <Navigate to="/login" />} />
 
                 {/* <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} /> */}
                 {/* <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} /> */}
                 <Route path="/upload" element={ isLoggedIn ? <Upload /> : <Navigate to="/login" />} />
+                <Route path="/uploadmd" element={ isLoggedIn ? <UploadMD /> : <Navigate to="/login" />} />
+                <Route path="/model/:id" element={ isLoggedIn ? <ModelPage /> : <Navigate to="/login" />} />
+
+
+                <Route path="/notification" element={ isLoggedIn ? <Notification /> : <Navigate to="/login" />} />
+
               </Routes>
             </div>
         </div>
