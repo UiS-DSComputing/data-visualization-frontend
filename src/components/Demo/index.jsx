@@ -20,12 +20,20 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import { Spacer } from "@nextui-org/react";
 import { Text } from "@nextui-org/react";
+import DemoTask from "../DemoTask";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineContent";
+
 
 function Demo() {
   return (
     <Container>
       <Container>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} style={{ alignItems: "flex-end" }}>
           <Text>Partners</Text>
           <FormGroup row={true}>
             <FormControlLabel control={<Checkbox />} label="Client 1" />
@@ -40,6 +48,29 @@ function Demo() {
       </Container>
       <Container></Container>
       <Container>
+        <DemoTask />
+        <Timeline>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot />
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>Eat</TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot />
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>Code</TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot />
+            </TimelineSeparator>
+            <TimelineContent>Sleep</TimelineContent>
+          </TimelineItem>
+        </Timeline>
         <Table />
       </Container>
     </Container>
@@ -318,7 +349,7 @@ function Table() {
   return (
     <div>
       <div className={fl.tools}>
-        <div className={fl.switch}>
+        {/* <div className={fl.switch}>
           <div style={{ border: "none", fontSize: "1.2em" }}>
             Requested Trains
           </div>
@@ -344,7 +375,7 @@ function Table() {
         <div className={fl.newbtn} onClick={() => PopUp(true)}>
           <IoAddCircleOutline color="white" />
           &nbsp;New Train Request
-        </div>
+        </div> */}
       </div>
       <table className={fl.tasks}>
         <thead>

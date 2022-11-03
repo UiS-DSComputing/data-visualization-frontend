@@ -193,38 +193,6 @@ function AddTrainRequest(props) {
           );
         })}
       </div>
-      <div className={sp.clientsrow}>
-        <div>Client(s): &nbsp;</div>
-        <div className={sp.grid}>
-          <label>
-            <input
-              onClick={() => dispatch({ type: "CLIENT", value: "client1" })}
-              type="checkbox"
-              id="client1"
-              name="client1"
-            />
-            &nbsp;Client(1), Norway
-          </label>
-          <label>
-            <input
-              onClick={() => dispatch({ type: "CLIENT", value: "client2" })}
-              type="checkbox"
-              id="client2"
-              name="client2"
-            />
-            &nbsp;Client(2), Norway
-          </label>
-          <label>
-            <input
-              onClick={() => dispatch({ type: "CLIENT", value: "client2" })}
-              type="checkbox"
-              id="client3"
-              name="client3"
-            />
-            &nbsp;Client(3), Germany
-          </label>
-        </div>
-      </div>
       <div style={{ textAlign: "right" }}>
         <button className={sp.btn} onClick={onConfirm}>
           Confirm

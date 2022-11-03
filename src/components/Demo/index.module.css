@@ -160,3 +160,22 @@
     border-left: 1px solid black;
     padding-left: 1em;
 }
+
+
+.timeline{
+    transform: rotate(90deg)
+}
+
+.timelineContentContainer {
+    text-align: left
+}
+
+.timelineContent {
+    display: inline-block;
+    transform: rotate(-90deg);
+    text-align: center;
+    min-width: 50;
+  }
+.timelineIcon {
+    transform: rotate(-90deg)
+  }
