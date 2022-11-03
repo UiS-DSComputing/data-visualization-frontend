@@ -1,0 +1,162 @@
+.newbtn{
+    background-color: #337aff;
+    width: fit-content;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+}
+
+.tools{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.switch{
+    display: flex;
+    align-items: flex-start;;
+}
+
+.switch div{
+    /* border: 1px solid black; */
+    padding: 0.2em 1em;
+}
+
+.swt{
+    border: none;
+}
+
+.checked_sw{
+    background: #337aff;
+    color: white;
+}
+
+
+.tasks {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 2em;
+    text-align: left;
+  }
+  
+  .tasks td, .tasks th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .tasks tr:nth-child(even){background-color: #f2f2f2;}
+  
+  .tasks tr:hover {background-color: #ddd;}
+  
+  .tasks th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #717171;
+    color: white;
+  }
+
+
+  .radio_toolbar{
+    display: flex;
+    align-items: center;
+}
+
+
+.checked {
+    border: 1px solid #3366ff;
+    color: white;
+    background-color: #3366ff;
+}
+.normal{
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+}
+
+.select{
+        /* padding: 10px; */
+    /* width: 200px; */
+    border: 1px solid rgb(59, 114, 185);
+    border-radius: 0.5em;
+    /* font-weight: bold; */
+    /* font-size: 1rem; */
+    padding: 0.1em 0.5em;
+}
+
+.radio_toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+  }
+
+  .radio_toolbar label {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    /* font-family: sans-serif, Arial; */
+    /* font-size: 16px; */
+    /* border-radius: 4px; */
+    border:none;
+    margin-right: 1em;
+}
+
+
+.popup_box {
+    position: fixed;
+    background: #00000050;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 999;
+  }
+  
+  .box {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    height: auto;
+    max-height: 70vh;
+    margin-top: calc(100vh - 85vh - 20px);
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #999;
+    overflow: auto;
+  }
+
+.closediv{
+  background: #ccdaf3;
+  text-align: right;
+  padding: 10px 20px;
+  position: fixed;
+  width: inherit;
+}
+
+.cmdlayout{
+    font-size: 16px;
+    padding: 2em;
+    margin:1em
+}
+
+.cmdlayout div{
+    margin:1em
+}
+
+.cmd{
+    background-color: black;
+    padding: 1em;
+    color: white;
+    border-radius: 0.5em;
+}
+
+.cmd span{
+    background-color: #737272;
+    padding: 0.2em 0.5em;
+    border-radius: 0.2em;
+    margin: 0 1em;
+}
+
+.clients div{
+    border-left: 1px solid black;
+    padding-left: 1em;
+}

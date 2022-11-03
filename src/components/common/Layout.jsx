@@ -16,6 +16,7 @@ import ModelMarket from '../ModelMarket';
 import Dataset from '../DatasetPage';
 import Request from '../RequestPage'
 import Panel from '../Panel';
+import Demo from '../Demo';
 import logo from '../../assets/uis.png'
 import {AiOutlineCloudUpload} from 'react-icons/ai'
 // import FileAccess from '../FileAccess';
@@ -76,6 +77,9 @@ const Layout = () => {
             <li className="nav-item">
               <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/panel"> Panel </Link></a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/demo"> Demo </Link></a>
+            </li>
           </ul>
         </div>
         { isLoggedIn &&  <div className="az-header-right">
@@ -99,7 +103,7 @@ const Layout = () => {
               <a className="dropdown-item">
               <Link to='/notification'>
                 Notification
-              </Link>   
+              </Link>
               </a>
               <a className="dropdown-item" style={{padding:"1em 0 0"}} onClick={() => {dispatch(authActions.logout())}}>Sign Out</a>
               </div>
@@ -126,6 +130,7 @@ const Layout = () => {
                 <Route path="/dataset/:id" element={ isLoggedIn ? <Dataset /> : <Navigate to="/login" />} />
                 <Route path="/request/:id" element={ isLoggedIn ? <Request /> : <Navigate to="/login" />} />
                 <Route path="/panel" element={ isLoggedIn ? <Panel /> : <Navigate to="/login" />} />
+                <Route path="/demo" element={ isLoggedIn ? <Demo /> : <Navigate to="/login" />} />
 
                 {/* <Route path="/file-access" index element={ isLoggedIn ? <FileAccess/> : <Navigate to="/login" />} /> */}
                 {/* <Route path="/rig-access" index element={ isLoggedIn ? <RigAccess/> : <Navigate to="/login" />} /> */}
