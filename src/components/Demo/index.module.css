@@ -161,21 +161,38 @@
     padding-left: 1em;
 }
 
-
 .timeline{
-    transform: rotate(90deg)
+    margin: 0 auto;
+    width: fit-content;
+}
+.timeline ul{
+    display: flex;
+}
+.tl_item{
+    display: flex;
+    flex-direction: column;   
 }
 
-.timelineContentContainer {
-    text-align: left
+.tl_item div:first-child{
+    position: relative;
+    right: 2em;
+}
+.tl_item div:nth-child(3),.tl_item div:nth-child(4){
+    font-size: 0.9em;
+    position: relative;
+    right: 1em;
+}
+.line{
+    display: flex;
+    line-height: 1em;
+    color: #c3c3c3;
 }
 
-.timelineContent {
-    display: inline-block;
-    transform: rotate(-90deg);
-    text-align: center;
-    min-width: 50;
-  }
-.timelineIcon {
-    transform: rotate(-90deg)
-  }
+.line span:nth-child(2){
+    border-bottom: 1px solid #c3c3c3;
+    width: 10em;
+    display: block;
+    position: relative;
+    bottom: 0.5em;
+}
+

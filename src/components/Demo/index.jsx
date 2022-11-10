@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState, useReducer } from "react";
-import { IoAddCircleOutline, IoDownloadOutline } from "react-icons/io5";
+import React, { useEffect, useState } from "react";
+import { IoDownloadOutline } from "react-icons/io5";
 import { MdDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,21 +13,12 @@ import tf from "../../assets/tf.png";
 import Dashboard from "./preDashboard";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper";
-import { styled } from "@mui/material/styles";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import { Spacer } from "@nextui-org/react";
 import { Text } from "@nextui-org/react";
 import DemoTask from "../DemoTask";
-import Timeline from "@mui/lab/Timeline";
-import TimelineItem from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import TimelineConnector from "@mui/lab/TimelineConnector";
-import TimelineContent from "@mui/lab/TimelineContent";
-import TimelineDot from "@mui/lab/TimelineContent";
-
 
 function Demo() {
   return (
@@ -49,28 +40,7 @@ function Demo() {
       <Container></Container>
       <Container>
         <DemoTask />
-        <Timeline>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>Eat</TimelineContent>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>Code</TimelineContent>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot />
-            </TimelineSeparator>
-            <TimelineContent>Sleep</TimelineContent>
-          </TimelineItem>
-        </Timeline>
+        <MyTimeline />
         <Table />
       </Container>
     </Container>
@@ -131,10 +101,8 @@ function Table() {
       color: "#888",
     },
   ];
-  const [complete, setComplete] = useState(false);
   const [showCmd, setShowCmd] = useState(false);
   const [cmdTask, setCmdTask] = useState({});
-  const [type, setType] = useState("all");
   const [popType, setPopType] = useState("cmd");
 
   function PopUp(is) {
@@ -270,9 +238,9 @@ function Table() {
     getAllTrainings();
     const interval = setInterval(() => {
       console.log(allTasks.length);
-      if (allTasks.length === 0) {
-        getAllTrainings();
-      }
+      // if (allTasks.length === 0) {
+      //   getAllTrainings();
+      // }
       if (allTasks.length > 0) {
         // update builded tasks
         let builded = allTasks.filter((item) => item.code === 20000);
@@ -288,18 +256,6 @@ function Table() {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
-
-  function handleFilter(type) {
-    let tmp = [];
-    if (type === "all") {
-      getAllTrainings();
-    } else {
-      getAllTrainings();
-      tmp = allTasks.filter((task) => task.status === type);
-      setAllTasks(tmp);
-    }
-    setType(type);
-  }
 
   const handleDownload = async (item) => {
     try {
@@ -348,35 +304,7 @@ function Table() {
 
   return (
     <div>
-      <div className={fl.tools}>
-        {/* <div className={fl.switch}>
-          <div style={{ border: "none", fontSize: "1.2em" }}>
-            Requested Trains
-          </div>
-          <div className={fl.radio_toolbar} name="model" id="model">
-            {status.map((item) => {
-              return (
-                <label
-                  key={item.value}
-                  className={item.value === type ? fl.checked : fl.normal}
-                >
-                  <input
-                    type="radio"
-                    value={item.value}
-                    name="model"
-                    onClick={() => handleFilter(item.value)}
-                  />
-                  {item.show}
-                </label>
-              );
-            })}
-          </div>
-        </div>
-        <div className={fl.newbtn} onClick={() => PopUp(true)}>
-          <IoAddCircleOutline color="white" />
-          &nbsp;New Train Request
-        </div> */}
-      </div>
+      <div className={fl.tools}></div>
       <table className={fl.tasks}>
         <thead>
           <tr>
@@ -634,6 +562,78 @@ function Map(props) {
         </div>
       )}
       {!has && <div>{msg}</div>}
+    </div>
+  );
+}
+
+function MyTimeline() {
+  const texts = [
+    {
+      text:"Client 1 created",
+      time:"16:10:56",
+      date:"2022/11/11"
+    },
+    {
+      text:"Client 2 created",
+      time:"16:12:32",
+      date:"2022/11/11"
+    },
+    {
+      text:"Client 1 running",
+      time:"16:40:23",
+      date:"2022/11/11"
+    },
+    {
+      text:"Client 2 running",
+      time:"16:40:36",
+      date:"2022/11/11"
+    },
+    {
+      text:"Client 1 finished",
+      time:"20:11:17",
+      date:"2022/11/11"
+    },
+    {
+      text:"Client 1 finished",
+      time:"20:11:25",
+      date:"2022/11/11"
+    },
+  ];
+  return (
+    <div className={fl.timeline}>
+      <ul>
+        {texts.map((item, i) => {
+          if (i === texts.length - 1) {
+            return <Line key={i} item={item} show={false} />;
+          } else return <Line key={i} item={item} show={true} />;
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function Line(props) {
+  const { item, show } = props;
+
+  return (
+    <li className={fl.tl_item}>
+      <div>{item.text}</div>
+      <div className={fl.line}>
+        <span>&#9679;</span>
+        {show && <span>&nbsp;</span>}
+      </div>
+      <div>
+        {item.time}
+      </div>
+      <div>{item.date}</div>
+    </li>
+  );
+}
+function Base() {
+  return (
+    <div className={fl.line}>
+      <span>&#9679;</span>
+      <span>&nbsp;</span>
     </div>
   );
 }
