@@ -6,6 +6,7 @@ import { authActions } from "../../store/";
 import pl from "./index.module.css";
 import { Link } from "react-router-dom";
 import { MdDeleteForever } from "react-icons/md";
+import Table from "../common/Table";
 
 function Panel() {
   const dispatch1 = useDispatch();
@@ -19,6 +20,75 @@ function Panel() {
 
   const [datas, setDatas] = useState([]);
   const [models, setModels] = useState([]);
+
+  const orgTh = [
+    {
+      field:"id",
+      value:""
+    },
+    {
+      field: "username",
+      value: "Username",
+    },
+    {
+      field:"name",
+      value:"User"
+    },
+    {
+      field:"email",
+      value:"Email"
+    },
+    {
+      field:"mobile",
+      value:"Mobile"
+    },
+    {
+      field:"role",
+      value:"Role"
+    },
+    {
+      field:"create",
+      value:"Create Time"
+    },
+    {
+      field:"operation",
+      value:"Operation"
+    }
+  ];
+  const orgData = [
+    {
+      id: 1,
+      username: "user1",
+      name: "Amy",
+      email: "admin@abc.com",
+      mobile: "+123445678",
+      role: "Admin",
+      create: "2022-1-2",
+      operation:["delete","edit"]
+    },
+    {
+      id: 2,
+      username: "user1",
+      name: "Amy",
+      email: "admin@abc.com",
+      mobile: "+123445678",
+      role: "Admin",
+      create: "2022-1-2",
+      operation:["delete","edit"]
+
+    },
+    {
+      id: 3,
+      username: "user1",
+      name: "Amy",
+      email: "admin@abc.com",
+      mobile: "+123445678",
+      role: "Admin",
+      create: "2022-1-2",
+      operation:["delete","edit"]
+
+    },
+  ];
 
   const getAllDBs = async () => {
     try {
@@ -93,9 +163,18 @@ function Panel() {
 
   return (
     <div className={pl.layout}>
+      <div>
+        <div className={pl.frow}>
+          <h4 style={{ width: "200px" }}>My Organization</h4>
+          <Link to={"/members"}>
+            <button className={pl.addbtn}>Add Member</button>
+          </Link>
+        </div>
+        <Table th={orgTh} data={orgData} />
+      </div>
       <div className={pl.datasets}>
         <div className={pl.frow}>
-          <h4 style={{width:"200px"}}>My Datasets</h4>
+          <h4 style={{ width: "200px" }}>My Datasets</h4>
           <Link to={"/upload"}>
             <button className={pl.addbtn}>Add Dataset</button>
           </Link>
@@ -136,7 +215,7 @@ function Panel() {
       </div>
       <div className={pl.datasets}>
         <div className={pl.frow}>
-          <h4 style={{width:"200px"}}>My Models</h4>
+          <h4 style={{ width: "200px" }}>My Models</h4>
           <Link to="/uploadmd">
             <button className={pl.addbtn}>Add Model</button>
           </Link>

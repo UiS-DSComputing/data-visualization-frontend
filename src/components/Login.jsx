@@ -45,47 +45,83 @@ const Login = () => {
   return (
     <>
       <div className="box">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-box">
-            <input
-              style={{ fontSize: "0.8rem" }}
-              onChange={handleChange}
-              name="username"
-              id="user-name"
-              type="text"
-              required=""
-            />
-            <label>Username</label>
-          </div>
-          <div className="input-box">
-            <input
-              onChange={handleChange}
-              name="password"
-              id="user-pass"
-              type="password"
-              required=""
-            />
-            <label>Password</label>
-          </div>
+        <div className="org">
+          <h2>Organization Login</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="input-box">
+              <input
+                style={{ fontSize: "0.8rem" }}
+                onChange={handleChange}
+                name="username"
+                id="user-name"
+                type="text"
+                required=""
+              />
+              <label>Username</label>
+            </div>
+            <div className="input-box">
+              <input
+                onChange={handleChange}
+                name="password"
+                id="user-pass"
+                type="password"
+                required=""
+              />
+              <label>Password</label>
+            </div>
 
-          {errMsg.length ? (
-            <div className="error-message">{errMsg}</div>
-          ) : (
-            <></>
-          )}
+            {errMsg.length ? (
+              <div className="error-message">{errMsg}</div>
+            ) : (
+              <></>
+            )}
 
-          <input id="submit" type="submit" name="" value="Submit" />
-        </form>
-        <p style={{ marginTop: "1rem" }}>
-          <a>
-            {" "}
-            <Link to="/registration">
+            <input id="submit" type="submit" name="" value="Submit" />
+          </form>
+          <p style={{ marginTop: "1rem" }}>
+            <a>
               {" "}
-              Not a User? Go to Registration page.{" "}
-            </Link>{" "}
-          </a>
-        </p>
+              <Link to="/registration">
+                {" "}
+                Not a User? Go to Registration page.{" "}
+              </Link>{" "}
+            </a>
+          </p>
+        </div>
+        <div className="usr">
+          <h2>User Login</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="input-box">
+              <input
+                style={{ fontSize: "0.8rem" }}
+                onChange={handleChange}
+                name="username"
+                id="user-name"
+                type="text"
+                required=""
+              />
+              <label>Username</label>
+            </div>
+            <div className="input-box">
+              <input
+                onChange={handleChange}
+                name="password"
+                id="user-pass"
+                type="password"
+                required=""
+              />
+              <label>Password</label>
+            </div>
+
+            {errMsg.length ? (
+              <div className="error-message">{errMsg}</div>
+            ) : (
+              <></>
+            )}
+
+            <input id="submit" type="submit" name="" value="Submit" />
+          </form>
+        </div>
       </div>
     </>
   );

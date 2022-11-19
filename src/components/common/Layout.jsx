@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FaRegFileAlt } from 'react-icons/fa';
 import {BiTerminal} from 'react-icons/bi'
 import { GrDatabase, GrPieChart, GrSettingsOption } from 'react-icons/gr';
+import {MdModelTraining} from "react-icons/md"
+import {CgArrangeFront} from "react-icons/cg"
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import EquiLogo from '../../assets/logo-company.png';
@@ -27,6 +29,7 @@ import UploadMD from '../uploadMD';
 import Notification from '../Notification';
 import AlertBox from '../AlertBox';
 import ModelPage from '../ModelPage';
+import Members from '../Members';
 
 
 const Layout = () => {
@@ -49,10 +52,10 @@ const Layout = () => {
         <div className="az-header-menu">
           <ul className="nav">
               <li className="nav-item">
-                <a className="nav-link"><GrPieChart className='ricon'/> <Link to="/"> Data Market </Link></a>
+                <a className="nav-link"><GrPieChart className='ricon'/> <Link to="/"> Data Hub </Link></a>
               </li>
               <li className="nav-item">
-              <a className="nav-link"> <GrSettingsOption className='ricon'/> <Link to="/modelMarket"> Model Market </Link>  </a>
+              <a className="nav-link"> <GrSettingsOption className='ricon'/> <Link to="/modelMarket"> Model Hub </Link>  </a>
             </li>
             <li className="nav-item">
               <a className="nav-link"> <FaRegFileAlt className='ricon'/> <Link to="/dashboard"> Dashboard </Link>  </a>
@@ -72,13 +75,13 @@ const Layout = () => {
               <a className="nav-link"> <AiOutlineCloudUpload className='ricon'/> <Link to="/upload"> Upload </Link></a>
             </li> */}
             <li className="nav-item">
-              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/fl"> FL </Link></a>
+              <a className="nav-link"> <MdModelTraining /> <Link to="/fl"> FL </Link></a>
             </li>
             <li className="nav-item">
-              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/panel"> Panel </Link></a>
+              <a className="nav-link"> <BiTerminal/> <Link to="/panel"> Panel </Link></a>
             </li>
             <li className="nav-item">
-              <a className="nav-link"> <BiTerminal className='ricon' size={"2em"}/> <Link to="/demo"> Demo </Link></a>
+              <a className="nav-link"> <BiTerminal/> <Link to="/demo"> Demo </Link></a>
             </li>
           </ul>
         </div>
@@ -137,6 +140,8 @@ const Layout = () => {
                 <Route path="/upload" element={ isLoggedIn ? <Upload /> : <Navigate to="/login" />} />
                 <Route path="/uploadmd" element={ isLoggedIn ? <UploadMD /> : <Navigate to="/login" />} />
                 <Route path="/model/:id" element={ isLoggedIn ? <ModelPage /> : <Navigate to="/login" />} />
+                <Route path="/members" element={ isLoggedIn ? <Members /> : <Navigate to="/login" />} />
+
 
 
                 <Route path="/notification" element={ isLoggedIn ? <Notification /> : <Navigate to="/login" />} />

@@ -43,6 +43,8 @@
   .tasks td, .tasks th {
     border: 1px solid #ddd;
     padding: 8px;
+    max-width: 400px;
+
   }
   
   .tasks tr:nth-child(even){background-color: #f2f2f2;}
@@ -52,7 +54,7 @@
   .tasks th {
     padding-top: 12px;
     padding-bottom: 12px;
-    background-color: #717171;
+    background-color: #627aa5;
     color: white;
   }
 

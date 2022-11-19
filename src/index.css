@@ -237,7 +237,6 @@ button{
 a {
   color: #3366ff;
   text-decoration: none;
-  width: 100%;
   text-align: center;
   background-color: transparent; }
   a:hover {
@@ -37544,7 +37543,7 @@ body {
   }
 
   .box {
-    width: 400px;
+    width:800px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -37554,6 +37553,21 @@ body {
     box-sizing: border-box;
     box-shadow: 0px 15px 25px rgba(0, 0, 0, .5);
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 4em 2em;
+  }
+  .org,.usr{
+    width:300px;
+   
+
+  }
+  .usr{
+    border-left: 1px solid white;
+    padding-left: 2em;
+  }
+  .usr{
   }
   
   .box h2 {
@@ -37822,3 +37836,10 @@ body {
   font-weight: bold;
 }
 
+/* xys */
+.normal_btn{
+  border: none;
+  background-color: #337aff;
+  color: white;
+  border-radius: 0.2em;
+}
