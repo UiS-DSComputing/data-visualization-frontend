@@ -68,22 +68,11 @@ function Panel() {
     },
     {
       id: 2,
-      username: "user1",
-      name: "Jerry",
-      email: "admin@cdf.com",
+      username: "user2",
+      name: "Bob",
+      email: "bob@abc.com",
       mobile: "+123445678",
-      role: "Admin",
-      create: "2022-1-2",
-      operation:["delete","edit"]
-
-    },
-    {
-      id: 3,
-      username: "user1",
-      name: "Jeff",
-      email: "admin@abc.com",
-      mobile: "+123445678",
-      role: "Admin",
+      role: "User",
       create: "2022-1-2",
       operation:["delete","edit"]
 
@@ -172,7 +161,7 @@ function Panel() {
         </div>
         <Table th={orgTh} data={orgData} />
       </div>
-      <div className={pl.datasets}>
+      {/* <div className={pl.datasets}>
         <div className={pl.frow}>
           <h4 style={{ width: "200px" }}>My Datasets</h4>
           <Link to={"/upload"}>
@@ -183,7 +172,6 @@ function Panel() {
           <thead>
             <tr>
               <th>No.</th>
-              {/* <th>Logo</th> */}
               <th>Name</th>
               <th>Description</th>
               <th>Data Type</th>
@@ -250,7 +238,7 @@ function Panel() {
             })}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 }

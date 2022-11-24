@@ -24,6 +24,7 @@ function ModelMarket() {
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
   // tmpdata
   const dh = [
+    {field:"index",value:""},
     {
       field: "id",
       value: "Id",
@@ -55,6 +56,31 @@ function ModelMarket() {
       value: "Hash",
     },
   ];
+  const tmpdata=[{
+    id:"m01",
+    type:"ResNet",
+    description:"text",
+    task:"Image Classification",
+    training:"TNBC",
+    create:"2022-11-10",
+  },
+  {
+    id:"m02",
+    type:"VGG",
+    description:"text",
+    task:"Image Classification",
+    training:"HR-NMIBC",
+    create:"2022-11-11",
+  },
+  {
+    id:"m03",
+    type:"UNet",
+    description:"text",
+    task:"Image Classification",
+    training:"SML",
+    create:"2022-11-10",
+  }
+]
   const [lists, setLists] = useState();
   const [showList, setShowList] = useState([
     {
@@ -106,22 +132,7 @@ function ModelMarket() {
           <button className="normal_btn">Add Model</button>
         </Link>
       </div>
-      {lists && <Table th={dh} data={lists} />}
-    </div>
-  );
-}
-
-function Row(props) {
-  const { data } = props;
-  return (
-    <div className={dm.row}>
-      <img src={logo} style={{ width: "135px" }}></img>
-      <div className={dm.row_info}>
-        <Link to={"/model/" + data.id}>
-          <h3 className={dm.row_title} style={{textAlign:"left"}}>{data.task}</h3>
-        </Link>
-        <div className={dm.desc}>{data.description}</div>
-      </div>
+      {lists && <Table th={dh} data={tmpdata} />}
     </div>
   );
 }

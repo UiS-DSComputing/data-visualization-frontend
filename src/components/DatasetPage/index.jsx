@@ -24,6 +24,10 @@ function DatasetPage(props) {
 
   const dh = [
     {
+      field:"index",
+      value:""
+    },
+    {
       field: "id",
       value: "Id",
       type: "link",
@@ -54,6 +58,17 @@ function DatasetPage(props) {
       value: "Data Hash",
     },
   ];
+  const tmpdata = {
+    index: 1,
+    id: "d01",
+    name: "name1",
+    description: "Description",
+    type: "data",
+    disease: "TNBC",
+    create: "2022-1-2",
+    hash: "",
+  };
+
   const [mine, setMine] = useState(true);
   const [data, setData] = useState();
   const getDB = async (id) => {
@@ -152,7 +167,7 @@ function DatasetPage(props) {
         <BsArrowLeft size={"1.2em"} />
         &nbsp;&nbsp;Go back to market
       </button>
-      {data && (
+      {tmpdata && (
         <table className={tb.tasks}>
           <thead>
             <tr>
@@ -170,7 +185,7 @@ function DatasetPage(props) {
                     key={item.field + i}
                     className={item.field === "description" ? tb.desc : ""}
                   >
-                    {data[item.field]}
+                    {tmpdata[item.field]}
                   </td>
                 );
               })}

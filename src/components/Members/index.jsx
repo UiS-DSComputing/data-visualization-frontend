@@ -47,28 +47,8 @@ function Members() {
       mobile: "+123445678",
       role: ["admin", "user"],
       create: "2022-1-2",
-      operation: "add",
-    },
-    {
-      id: 2,
-      username: "user1",
-      name: "Amy",
-      email: "admin@abc.com",
-      mobile: "+123445678",
-      role: ["admin", "user"],
-      create: "2022-1-2",
-      operation: "add",
-    },
-    {
-      id: 3,
-      username: "user1",
-      name: "Amy",
-      email: "admin@abc.com",
-      mobile: "+123445678",
-      role: ["admin", "user"],
-      create: "2022-1-2",
-      operation: "add",
-    },
+      operation: ["add"],
+    }
   ];
 
   return (

@@ -27,11 +27,12 @@ function DataMarket() {
 
   // tmpdata
   const dh = [
+    { field: "index", value: "" },
     {
       field: "id",
       value: "Id",
-      type:"link",
-      page:"dataset"
+      type: "link",
+      page: "dataset",
     },
     {
       field: "name",
@@ -60,40 +61,36 @@ function DataMarket() {
   ];
   const dhData = [
     {
-      index: 1,
       id: "d01",
       name: "name1",
-      desc: "Description",
+      description: "Description",
       type: "data",
       disease: "TNBC",
       create: "2022-1-2",
       hash: "",
     },
     {
-      index: 2,
       id: "d02",
       name: "name2",
-      desc: "Description",
+      description: "Description",
       type: "metadata",
       disease: "TNBC",
       create: "2022-1-20",
       hash: "",
     },
     {
-      index: 3,
       id: "d03",
       name: "name3",
-      desc: "Description",
+      description: "Description",
       type: "data",
       disease: "HR-NMIBC",
       create: "2022-1-2",
       hash: "",
     },
     {
-      index: 4,
       id: "d04",
       name: "name4",
-      desc: "Description",
+      description: "Description",
       type: "data",
       disease: "HR-NMIBC",
       create: "2022-1-2",
@@ -143,7 +140,7 @@ function DataMarket() {
           <button className="normal_btn">Add dataset</button>
         </Link>
       </div>
-      {lists && <Table th={dh} data={lists} />}
+      {lists && <Table th={dh} data={dhData} />}
     </div>
   );
 }
