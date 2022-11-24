@@ -55,3 +55,17 @@
     margin: 5em 1em 0;
     width: fit-content;
 }
+
+.access{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5em;
+}
+
+.cbtn{
+    border: 1px solid green;
+    background: none;
+    border-radius: 0.2em;
+    margin-right: 2em;
+}

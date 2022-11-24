@@ -27,17 +27,18 @@ function DataMarket() {
 
   // tmpdata
   const dh = [
-    { field: "index", value: "" },
     {
       field: "id",
       value: "Id",
+      type:"link",
+      page:"dataset"
     },
     {
       field: "name",
       value: "Name",
     },
     {
-      field: "desc",
+      field: "description",
       value: "description",
     },
     {
@@ -142,7 +143,7 @@ function DataMarket() {
           <button className="normal_btn">Add dataset</button>
         </Link>
       </div>
-      <Table th={dh} data={dhData} />
+      {lists && <Table th={dh} data={lists} />}
     </div>
   );
 }

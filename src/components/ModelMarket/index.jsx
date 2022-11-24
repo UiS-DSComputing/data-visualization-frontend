@@ -8,6 +8,7 @@ import { authActions } from "../../store/";
 import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import logo from "../../assets/bert.JPG";
+import Table from "../common/Table";
 
 import axios from "axios";
 
@@ -21,7 +22,39 @@ function ModelMarket() {
   };
   const BACKEND_API_PREFIX =
     process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
-
+  // tmpdata
+  const dh = [
+    {
+      field: "id",
+      value: "Id",
+      type:"link",
+      page:"model"
+    },
+    {
+      field: "description",
+      value: "description",
+    },
+    {
+      field: "type",
+      value: "Type",
+    },
+    {
+      field: "task",
+      value: "Task",
+    },
+    {
+      field:"training",
+      value:"Training Data"
+    },
+    {
+      field: "create",
+      value: "Create Time",
+    },
+    {
+      field: "hash",
+      value: "Hash",
+    },
+  ];
   const [lists, setLists] = useState();
   const [showList, setShowList] = useState([
     {
@@ -52,25 +85,28 @@ function ModelMarket() {
   }, []);
 
   return (
-    <div className={md.layout}>
-      <div className={md.searchbar}>
-        <div className={dm.search}>
-          <input></input>
-          <FiSearch />
+    <div className={dm.layout}>
+      <div className={dm.tools}>
+        <div className={dm.searchs}>
+          <label>
+            Type:
+            <input></input>
+          </label>
+          <label>
+            Task:
+            <input></input>
+          </label>
+          <label>
+            Training Data:
+            <input></input>
+          </label>
+          <button className="normal_btn">Search</button>
         </div>
-        <select name="sort" className={dm.sort}>
-          <option>Best Match</option>
-          <option>Most cited</option>
-          <option>Newest</option>
-        </select>
+        <Link to={"/uploadmd"}>
+          <button className="normal_btn">Add Model</button>
+        </Link>
       </div>
-
-      <div className={md.results}>
-        <h3 style={{textAlign:"left"}}>{showList.length} model results</h3>
-        {showList.map((item,i) => {
-          return <Row key={i} data={item} />;
-        })}
-      </div>
+      {lists && <Table th={dh} data={lists} />}
     </div>
   );
 }

@@ -2,7 +2,7 @@
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    margin-top: 2em;
+    margin: 2em 0;
     text-align: left;
   }
   
@@ -15,9 +15,24 @@
   
   .tasks tr:hover {background-color: #ddd;}
   
+  .tasks .desc_short{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+    width: fit-content;
+  }
+
   .tasks th {
     padding-top: 12px;
     padding-bottom: 12px;
     background-color: #627aa5;
     color: white;
   }
+
+.desc{
+  max-width: 200px;
+  width: fit-content;
+  text-align: left;
+  white-space: break-spaces;
+}

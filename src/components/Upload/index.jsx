@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import FileUpload from "../common/file-upload/file-upload.component";
 import sp from "./index.module.css";
 import { useNavigate } from "react-router-dom";
+import dp from "../DatasetPage/index.module.css";
+import tb from "../common/Table/index.module.css"
 
 function Upload() {
   const BACKEND_API_PREFIX =
@@ -77,6 +79,43 @@ function Upload() {
         navigate("/panel");
       });
   };
+  const th = ["name", "view", "update", "download"];
+  const [orgs, setOrgs] = useState([
+    {
+      name: "org1",
+      view: false,
+      update: false,
+      download: false,
+    },
+    {
+      name: "org2",
+      view: false,
+      update: false,
+      download: false,
+    },
+    {
+      name: "org3",
+      view: false,
+      update: false,
+      download: false,
+    },
+  ]);
+
+  function handleChangeAccess(name, field) {
+    console.log(name);
+    console.log(field);
+    let tmp = orgs.map((item) => {
+      if (item.name === name) {
+        item[field] = !item[field];
+      }
+      return item;
+    });
+    setOrgs(tmp);
+  }
+
+  function handleConfirm() {
+    console.log(orgs);
+  }
 
   return (
     <>
@@ -156,12 +195,65 @@ function Upload() {
               />
             </div>
           </div>
+          <div>
+            Evaluated Hash Value: &nbsp; &nbsp;
+            <input
+              type="text"
+              placeholder=""
+              // onKeyUp={(e) =>
+              //   dispatch({ type: "HASH", value: e.target.value })
+              // }
+              // className={sp.enter}
+            />
+          </div>
           <FileUpload
             ref={childRef}
             // accept=".csv"
             handleChange={handleChange}
             updateFilesCb={handleChange}
           />
+          <div>
+            <div className={dp.access}>
+              <h3>Access Control by Chaincode </h3>
+            </div>
+            <table className={tb.tasks}>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>View</th>
+                  <th>Update</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orgs.map((item) => {
+                  return (
+                    <tr key={item.name}>
+                      {th.map((field) => {
+                        if (field === "name") {
+                          return <td key={item.name + field}>{item[field]}</td>;
+                        } else {
+                          return (
+                            <td key={item.name + field}>
+                              <input
+                                type="checkbox"
+                                id={field}
+                                checked={item[field]}
+                                name={item.name}
+                                onChange={() =>
+                                  handleChangeAccess(item.name, field)
+                                }
+                              />
+                            </td>
+                          );
+                        }
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           <button
             style={{
               borderRadius: "5px",
@@ -172,12 +264,13 @@ function Upload() {
             className="btn btn-primary"
             type="submit"
           >
-            Submit File
+            Submit
           </button>
         </form>
       </div>
     </>
   );
 }
+
 
 export default Upload;

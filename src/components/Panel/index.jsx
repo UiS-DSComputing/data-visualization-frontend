@@ -69,8 +69,8 @@ function Panel() {
     {
       id: 2,
       username: "user1",
-      name: "Amy",
-      email: "admin@abc.com",
+      name: "Jerry",
+      email: "admin@cdf.com",
       mobile: "+123445678",
       role: "Admin",
       create: "2022-1-2",
@@ -80,7 +80,7 @@ function Panel() {
     {
       id: 3,
       username: "user1",
-      name: "Amy",
+      name: "Jeff",
       email: "admin@abc.com",
       mobile: "+123445678",
       role: "Admin",
