@@ -10,14 +10,14 @@ const Registration = () => {
     <>
       <div className="box">
         <div className="org">
-        <h2>Organization Registration</h2>
-        <Infobox />
-        <p style={{ marginTop: "1rem" }}>
-          <a>
-            {" "}
-            <Link to="/login"> Already an user? Go to Login page. </Link>{" "}
-          </a>
-        </p>
+          <h2>Organization Registration</h2>
+          <Infobox is_org={true} />
+          <p style={{ marginTop: "1rem" }}>
+            <a>
+              {" "}
+              <Link to="/login"> Already an user? Go to Login page. </Link>{" "}
+            </a>
+          </p>
         </div>
         <div className="line"></div>
         <div className="usr">
@@ -29,7 +29,8 @@ const Registration = () => {
   );
 };
 
-function Infobox() {
+function Infobox(props) {
+  const { is_org } = props;
   const navigate = useNavigate();
   const [inputVal, setInputVal] = useState({
     id: 0,
@@ -47,6 +48,9 @@ function Infobox() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (is_org) {
+      inputVal["is_org"] = true;
+    }
 
     axios
       .post(`${BACKEND_API_PREFIX}/user`, inputVal)
@@ -62,15 +66,27 @@ function Infobox() {
   };
   return (
     <form onSubmit={handleSubmit}>
+      {!is_org && (
+        <div className="input-box">
+          <input
+            onChange={handleChange}
+            name="name"
+            id="user-name"
+            type="text"
+            required=""
+          />
+          <label>Name</label>
+        </div>
+      )}
       <div className="input-box">
         <input
           onChange={handleChange}
-          name="name"
-          id="user-name"
+          name="org_name"
+          id="org-name"
           type="text"
           required=""
         />
-        <label>Name</label>
+        <label>Organization Name</label>
       </div>
       <div className="input-box">
         <input

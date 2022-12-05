@@ -55,6 +55,7 @@ function Panel() {
       value:"Operation"
     }
   ];
+  // if is not org, delete operation
   const orgData = [
     {
       id: 1,
@@ -108,8 +109,8 @@ function Panel() {
   };
 
   useEffect(() => {
-    getAllDBs();
-    getAllMDs();
+    // getAllDBs();
+    // getAllMDs();
   }, []);
 
   const delDB = async (id) => {
