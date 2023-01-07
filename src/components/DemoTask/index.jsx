@@ -9,7 +9,7 @@ import { authActions } from "../../store";
 import { Tooltip, Link, Text } from "@nextui-org/react";
 
 const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 
 function DemoTask(props) {
   const { addRequest, updateTask, handleClose } = props;

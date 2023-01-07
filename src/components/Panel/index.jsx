@@ -16,7 +16,7 @@ function Panel() {
     headers: { Authorization: `Bearer ${token}` },
   };
   const BACKEND_API_PREFIX =
-    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+    process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 
   const [datas, setDatas] = useState([]);
   const [models, setModels] = useState([]);

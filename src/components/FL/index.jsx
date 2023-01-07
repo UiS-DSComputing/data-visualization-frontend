@@ -29,7 +29,7 @@ function Table() {
     headers: { Authorization: `Bearer ${token}` },
   };
   const BACKEND_API_PREFIX =
-    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+    process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
   const [pop, setPop] = useState(false);
   // all the tasks
   const [allTasks, setAllTasks] = useState([]);
@@ -376,7 +376,7 @@ function Table() {
                 )}
                 {item.status !== "waiting" && (
                   <td>
-                    <a href={"http://161.97.133.43:"+item.global_model_port+"/"} target="_blank" >
+                    <a href={"http://localhost:"+item.global_model_port+"/"} target="_blank" >
                       models
                     </a>
                   </td>
@@ -390,7 +390,7 @@ function Table() {
                 )}
                 {item.status !== "waiting" && (
                   <td>
-                    <a href={"http://161.97.133.43:"+item.tensorboard_port+"/"} target="_blank">
+                    <a href={"http://localhost:"+item.tensorboard_port+"/"} target="_blank">
                       <img src={tf} style={{ width: "20px" }}></img>
                     </a>
                   </td>
@@ -526,7 +526,7 @@ function Map(props) {
     headers: { Authorization: `Bearer ${token}` },
   };
   const BACKEND_API_PREFIX =
-    process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+    process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 
   const getLocation = async () => {
       await axios

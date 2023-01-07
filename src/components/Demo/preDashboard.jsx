@@ -10,7 +10,7 @@ import iconShadow from "../../../node_modules/leaflet/dist/images/marker-shadow.
 import { authActions } from "../../store/";
 import FileDataViewer from "../FileDataViewer";
 const BACKEND_API_PREFIX =
-  process.env["BACKEND_API_PREFIX"] || "http://161.97.133.43:8000";
+  process.env["BACKEND_API_PREFIX"] || "http://localhost:8000";
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
